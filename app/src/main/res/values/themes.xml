@@ -18,6 +18,19 @@
         <item name="android:textColor">@color/black</item>
     </style>
 
+    <style name="AppBackground" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="android:background">@color/sea_green</item>
+    </style>
+
+    <style name="ToolbarTheme" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="android:background">@color/sea_blue</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="Temperature" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="android:background">@color/white</item>
+    </style>
+
     <style name="Theme.HygroSense.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
