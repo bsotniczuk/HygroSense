@@ -8,6 +8,14 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
+    <color name="sea_blue">#99d9ff</color>
+    <color name="sea_blue_light">#c0edff</color>
+    <color name="sea_green">#e0fffe</color>
+    <color name="air_gray">#eaeaea</color>
+
+    <color name="dark_mode_gray">#313b4d</color>
+    <color name="dark_mode_blue">#141820</color>
+
     <color name="colorPrimaryOld">#3F51B5</color>
     <color name="colorPrimaryDarkOld">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
