@@ -8,129 +8,132 @@
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
+        style="@style/ToolbarTheme"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        style="@style/ToolbarTheme"
         app:popupTheme="@style/Theme.HygroSense">
 
         <TextView
             android:id="@+id/titleToolbar"
+            style="@style/ToolbarTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:minHeight="?actionBarSize"
-            style="@style/ToolbarTheme"
             android:text="@string/app_name"
             android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title" />
-
     </androidx.appcompat.widget.Toolbar>
 
     <RelativeLayout
+        android:id="@+id/relativeLayout"
+        style="@style/AppBackground"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="?attr/actionBarSize"
-        style="@style/AppBackground"
         tools:context=".MainActivity">
 
-        <TextView
-            android:id="@+id/remoteNameTextView"
-            style="@style/TextView"
+        <LinearLayout
+            android:id="@+id/deviceInfoLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:text="@string/remote_name"
-            android:textAlignment="center"
-            android:textSize="24sp" />
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/temperatureTextView"
-            style="@style/TextView"
+            <TextView
+                android:id="@+id/remoteNameTextView"
+                style="@style/TextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:text="@string/remote_name"
+                android:textAlignment="center"
+                android:textSize="24sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/temperatureLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/remoteNameTextView"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:text=""
-            android:textAlignment="center"
-            android:textSize="24sp" />
+            android:layout_below="@id/deviceInfoLinearLayout"
+            android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/temperatureTextView1"
-            android:layout_below="@+id/humidityValueTextView"
-            android:layout_width="118dp"
-            android:layout_height="157dp"
-            android:src="@drawable/thermometer_svg" />
+            <ImageView
+                android:id="@+id/temperatureImageView"
+                android:layout_width="118dp"
+                android:layout_height="157dp"
+                android:src="@drawable/thermometer_svg" />
 
-        <ImageView
-            android:id="@+id/temperatureTextView2"
-            android:layout_below="@+id/temperatureTextView1"
-            android:layout_width="133dp"
-            android:layout_height="165dp"
-            android:src="@drawable/humidity_svg" />
+            <TextView
+                android:id="@+id/temperatureValueTextView"
+                style="@style/TextView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:gravity="center"
+                android:text="@string/temperature"
+                android:textAlignment="center"
+                android:textSize="24sp" />
+        </LinearLayout>
 
-<!--        <android.support.v7.widget.AppCompatImageView-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            app:srcCompat="@drawable/thermometer_svg" />-->
-
-        <TextView
-            android:id="@+id/temperatureValueTextView"
-            style="@style/TextView"
+        <LinearLayout
+            android:id="@+id/linearLayout3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/temperatureTextView"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:text="@string/temperature"
-            android:textAlignment="center"
-            android:textSize="24sp" />
+            android:layout_below="@id/temperatureLinearLayout"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/humidityTextView"
-            style="@style/TextView"
+            <ImageView
+                android:id="@+id/humidityImageView"
+                android:layout_width="133dp"
+                android:layout_height="165dp"
+                android:src="@drawable/humidity_svg" />
+
+            <TextView
+                android:id="@+id/humidityValueTextView"
+                style="@style/TextView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:gravity="center"
+                android:text="@string/humidity"
+                android:textAlignment="center"
+                android:textSize="24sp" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/addToSettingsDb"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/temperatureValueTextView"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:text=""
-            android:textAlignment="center"
-            android:textSize="24sp" />
+            android:layout_below="@+id/linearLayout3"
+            android:layout_alignParentEnd="true"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:onClick="addToSettingsDb"
+            android:text="addToSettingsDb" />
 
-        <TextView
-            android:id="@+id/humidityValueTextView"
-            style="@style/TextView"
+        <Button
+            android:id="@+id/deleteDb"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/humidityTextView"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:text="@string/humidity"
-            android:textAlignment="center"
-            android:textSize="24sp" />
+            android:layout_below="@+id/addToSettingsDb"
+            android:layout_alignParentEnd="true"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:onClick="deleteDb"
+            android:text="deleteDb" />
 
-<!--        <Button-->
-<!--            android:id="@+id/stopAllAndSetName"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_alignParentEnd="true"-->
-<!--            android:layout_below="@+id/humidityValueTextView"-->
-<!--            android:layout_marginLeft="8dp"-->
-<!--            android:layout_marginRight="8dp"-->
-<!--            android:onClick="getHumidity"-->
-<!--            android:text="button text" />-->
-
-<!--        <Button-->
-<!--            android:id="@+id/stopAllAndSetName2"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_alignParentEnd="true"-->
-<!--            android:layout_below="@+id/stopAllAndSetName"-->
-<!--            android:layout_marginLeft="8dp"-->
-<!--            android:layout_marginRight="8dp"-->
-<!--            android:onClick="getDataFromSensor"-->
-<!--            android:text="button text2" />-->
+        <Button
+            android:id="@+id/readSettingsItem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/deleteDb"
+            android:layout_alignParentEnd="true"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:onClick="readSettingsItem"
+            android:text="readSettingsItem" />
 
     </RelativeLayout>
 

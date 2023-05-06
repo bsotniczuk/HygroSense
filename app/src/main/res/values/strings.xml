@@ -3,4 +3,5 @@
     <string name="remote_name">ESP32 with DHT22 Sensor</string>
     <string name="temperature">Temperature</string>
     <string name="humidity">Humidity</string>
+    <string name="action_settings">Settings</string>
 </resources>
