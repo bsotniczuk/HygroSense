@@ -2,12 +2,9 @@ package pl.bsotniczuk.hygrosense;
 
 import android.util.Log;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import pl.bsotniczuk.hygrosense.api.HumidityApi;
 import pl.bsotniczuk.hygrosense.api.SensorDataApi;
 import pl.bsotniczuk.hygrosense.model.SensorData;
 import retrofit2.Call;
@@ -44,7 +41,7 @@ public class ApiFetcher {
 
     public void fetchApiDataInfo() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.18/")
+                .baseUrl("http://192.168.1.16/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -55,7 +52,6 @@ public class ApiFetcher {
             @Override
             public void onResponse(Call<SensorData> call, Response<SensorData> response) {
                 if (response.code() == 200) { //HTTP Code 200 equals to OK
-
                     setTemperature(response.body().getTemperature());
                     setHumidity(response.body().getHumidity());
                     String deviceName = response.body().getDeviceName();
@@ -70,33 +66,6 @@ public class ApiFetcher {
 
             @Override
             public void onFailure(Call<SensorData> call, Throwable t) {
-                Log.i("HygroSense", "Data call to API failed: " + t);
-            }
-        });
-    }
-
-    public void fetchApiData() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.18/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        HumidityApi humidityApi = retrofit.create(HumidityApi.class);
-        Call<String> call = humidityApi.getHumidity();
-
-        call.enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                if (response.code() == 200) { //HTTP Code 200 equals to OK
-                    String jsonMessage = response.body();
-                    if (StringUtils.isNotBlank(jsonMessage)) {
-                        Log.i("HygroSense", "Data fetched: " + jsonMessage);
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<String> call, Throwable t) {
                 Log.i("HygroSense", "Data call to API failed: " + t);
             }
         });

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">HygroSense</string>
+    <string name="remote_name">ESP32 z sensorem DHT22</string>
+    <string name="temperature">Temperatura</string>
+    <string name="humidity">Wilgotność</string>
+    <string name="action_settings">Ustawienia</string>
+</resources>
