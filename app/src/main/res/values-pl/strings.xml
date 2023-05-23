@@ -5,4 +5,5 @@
     <string name="temperature">Temperatura</string>
     <string name="humidity">Wilgotność</string>
     <string name="action_settings">Ustawienia</string>
+    <string name="connecting">Łączenie</string>
 </resources>

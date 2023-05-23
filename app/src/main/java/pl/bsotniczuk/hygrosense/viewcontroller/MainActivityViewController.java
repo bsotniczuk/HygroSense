@@ -1,16 +1,16 @@
 package pl.bsotniczuk.hygrosense.viewcontroller;
 
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.TransitionDrawable;
 import android.util.Log;
 import android.widget.TextView;
 
-import androidx.lifecycle.ViewModelProvider;
 import pl.bsotniczuk.hygrosense.ApiFetcher;
 import pl.bsotniczuk.hygrosense.HygroEventListener;
 import pl.bsotniczuk.hygrosense.MainActivity;
 import pl.bsotniczuk.hygrosense.R;
 import pl.bsotniczuk.hygrosense.controller.DatabaseController;
 import pl.bsotniczuk.hygrosense.controller.ToolbarController;
-import pl.bsotniczuk.hygrosense.data.viewmodel.SettingsViewModel;
 
 public class MainActivityViewController implements HygroEventListener {
 
@@ -19,25 +19,23 @@ public class MainActivityViewController implements HygroEventListener {
     TextView temperatureValueTextView;
     TextView humidityValueTextView;
 
-    private SettingsViewModel settingsViewModel;
-    private DatabaseController databaseController;
+    public static DatabaseController databaseController;
+    private boolean wasConnectionEstablished;
+    public static String ipAddress = "";
 
     public MainActivityViewController(
             MainActivity mainActivity,
             ApiFetcher apiFetcher,
             TextView temperatureValueTextView,
-            TextView humidityValueTextView,
-            SettingsViewModel settingsViewModel) {
+            TextView humidityValueTextView
+            ) {
         this.mainActivity = mainActivity;
+        databaseController = new DatabaseController(this.mainActivity);
         this.apiFetcher = apiFetcher;
         this.temperatureValueTextView = temperatureValueTextView;
         this.humidityValueTextView = humidityValueTextView;
-        this.settingsViewModel = settingsViewModel;
 
-//        settingsViewModel = new ViewModelProvider(this.mainActivity).get(SettingsViewModel.class);
-//        databaseController = new DatabaseController(this.mainActivity);
-
-        new ToolbarController(mainActivity);
+        new ToolbarController(this.mainActivity, this.mainActivity.findViewById(R.id.toolbar));
 
         refreshTextViewThread();
     }
@@ -49,6 +47,10 @@ public class MainActivityViewController implements HygroEventListener {
         String humidityText = "" + apiFetcher.getHumidity() + " %";
         temperatureValueTextView.setText(temperatureText);
         humidityValueTextView.setText(humidityText);
+
+        if (!this.wasConnectionEstablished) {
+            connectionEstablished();
+        }
     }
 
     public void refreshTextViewThread() {
@@ -61,7 +63,7 @@ public class MainActivityViewController implements HygroEventListener {
                         mainActivity.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                apiFetcher.fetchApiDataInfo();
+                                apiFetcher.fetchApiDataInfo(ipAddress);
                             }
                         });
                     } catch (InterruptedException e) {
@@ -71,5 +73,20 @@ public class MainActivityViewController implements HygroEventListener {
             }
         };
         t.start();
+    }
+
+    public void connectionEstablished() {
+        TextView connectionTextView = mainActivity.findViewById(R.id.connectionTextView);
+
+        ColorDrawable[] array = {
+                new ColorDrawable(mainActivity.getResources().getColor(R.color.colorConnecting)),
+                new ColorDrawable(mainActivity.getResources().getColor(R.color.colorConnectionEstablished))
+        };
+        TransitionDrawable colorTransition = new TransitionDrawable(array);
+        connectionTextView.setBackground(colorTransition);
+        colorTransition.startTransition(1000);
+        connectionTextView.setText("");
+
+        this.wasConnectionEstablished = true;
     }
 }
