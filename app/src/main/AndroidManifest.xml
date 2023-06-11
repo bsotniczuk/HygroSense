@@ -16,10 +16,16 @@
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+
+        <activity
+            android:name=".SettingsActivity"
+            android:label=""
+            android:theme="@style/Theme.SettingsActivity"/>
+
         <activity
             android:name=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

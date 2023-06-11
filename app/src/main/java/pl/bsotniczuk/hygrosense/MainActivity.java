@@ -4,12 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import pl.bsotniczuk.hygrosense.data.DbConstants;
 import pl.bsotniczuk.hygrosense.viewcontroller.MainActivityViewController;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
 
-    //TODO: settings menu
     //TODO: Test wifi connection based on settings
     //TODO: encrypt wifi password in database and hide when entering in settings
     //TODO: Bluetooth connection with esp32 to exchange data
@@ -26,9 +26,7 @@ public class MainActivity extends AppCompatActivity {
         MainActivityViewController mainActivityViewController =
                 new MainActivityViewController(
                         this,
-                        this.apiFetcher,
-                        findViewById(R.id.temperatureValueTextView),
-                        findViewById(R.id.humidityValueTextView)
+                        this.apiFetcher
                 );
         this.apiFetcher.addListener(mainActivityViewController);
     }
@@ -39,5 +37,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void readSettingsItem(View view) {
         MainActivityViewController.databaseController.readSettingsItem();
+    }
+
+    public void launchSettings(View view) {
+        Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

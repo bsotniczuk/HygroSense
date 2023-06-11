@@ -26,4 +26,6 @@
 
     <color name="colorConnecting">#B80000</color>
     <color name="colorConnectionEstablished">#007500</color>
+
+    <color name="lightBlackBackground">#4D000000</color>
 </resources>
