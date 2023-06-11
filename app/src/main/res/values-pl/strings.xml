@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">HygroSense</string>
+    <string name="activity_settings">Ustawienia</string>
     <string name="remote_name">ESP32 z sensorem DHT22</string>
     <string name="temperature">Temperatura</string>
     <string name="humidity">Wilgotność</string>
     <string name="action_settings">Ustawienia</string>
     <string name="connecting">Łączenie</string>
+    <string name="ip_address_of_the_esp32">IP urządzenia pomiarowego</string>
+    <string name="wifi_ssid_name">WiFi SSID (nazwa)</string>
+    <string name="wifi_password">Hasło do WiFi</string>
+    <string name="action_info">info</string>
 </resources>

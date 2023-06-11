@@ -10,7 +10,7 @@ import pl.bsotniczuk.hygrosense.HygroEventListener;
 import pl.bsotniczuk.hygrosense.MainActivity;
 import pl.bsotniczuk.hygrosense.R;
 import pl.bsotniczuk.hygrosense.controller.DatabaseController;
-import pl.bsotniczuk.hygrosense.controller.ToolbarController;
+import pl.bsotniczuk.hygrosense.controller.ToolbarMainActivityController;
 
 public class MainActivityViewController implements HygroEventListener {
 
@@ -20,22 +20,20 @@ public class MainActivityViewController implements HygroEventListener {
     TextView humidityValueTextView;
 
     public static DatabaseController databaseController;
-    private boolean wasConnectionEstablished;
     public static String ipAddress = "";
+    private boolean wasConnectionEstablished;
 
     public MainActivityViewController(
             MainActivity mainActivity,
-            ApiFetcher apiFetcher,
-            TextView temperatureValueTextView,
-            TextView humidityValueTextView
+            ApiFetcher apiFetcher
             ) {
         this.mainActivity = mainActivity;
         databaseController = new DatabaseController(this.mainActivity);
         this.apiFetcher = apiFetcher;
-        this.temperatureValueTextView = temperatureValueTextView;
-        this.humidityValueTextView = humidityValueTextView;
+        this.temperatureValueTextView = this.mainActivity.findViewById(R.id.temperatureValueTextView);
+        this.humidityValueTextView = this.mainActivity.findViewById(R.id.humidityValueTextView);
 
-        new ToolbarController(this.mainActivity, this.mainActivity.findViewById(R.id.toolbar));
+        new ToolbarMainActivityController(this.mainActivity, this.mainActivity.findViewById(R.id.toolbar));
 
         refreshTextViewThread();
     }
