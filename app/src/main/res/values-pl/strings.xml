@@ -11,4 +11,5 @@
     <string name="wifi_ssid_name">WiFi SSID (nazwa)</string>
     <string name="wifi_password">Hasło do WiFi</string>
     <string name="action_info">info</string>
+    <string name="action_bluetooth">bluetooth</string>
 </resources>

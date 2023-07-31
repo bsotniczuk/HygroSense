@@ -20,17 +20,18 @@ public class ToolbarSettingsController {
             int id = item.getItemId();
             if (id == R.id.action_info) {
                 Toast.makeText(
-                        settingsActivity.getApplicationContext(),
+                                settingsActivity.getApplicationContext(),
                                 "Info item clicked",
                                 Toast.LENGTH_SHORT)
                         .show();
-            }
-            else if (id == android.R.id.home) {
+            } else if (id == android.R.id.home) {
                 Toast.makeText(
                                 settingsActivity.getApplicationContext(),
                                 "Back button clicked",
                                 Toast.LENGTH_SHORT)
                         .show();
+            } else if (id == R.id.action_bluetooth) {
+                settingsActivity.startBtAndConnectToEsp32();
             }
             return false;
         });

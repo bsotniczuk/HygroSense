@@ -17,6 +17,7 @@ public class DatabaseController {
     MainActivity mainActivity;
     SettingsViewModel settingsViewModel;
     AppDatabase appDatabase;
+    static SettingsItem settingsItem;
 
     public DatabaseController(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
@@ -31,6 +32,7 @@ public class DatabaseController {
 
         final Observer<SettingsItem> settingsObserver = settingsItem -> {
             if (settingsItem != null) {
+                DatabaseController.settingsItem = settingsItem;
                 MainActivityViewController.ipAddress = settingsItem.getEsp32_ip_address();
                 Log.i("HygroSense Db", "settings: wifi_ssid: " + settingsItem.getWifi_ssid() + " | esp32ipAddress:" + settingsItem.getEsp32_ip_address() + " | toString: " + settingsItem.toString());
             }

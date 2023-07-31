@@ -66,6 +66,7 @@
                     android:layout_marginBottom="10dp"
                     android:layout_weight="1"
                     android:background="@drawable/roundedtextview"
+                    android:enabled="false"
                     android:imeOptions="actionNext"
                     android:inputType="text"
                     android:maxLines="1"
@@ -96,6 +97,7 @@
                     android:layout_marginBottom="10dp"
                     android:layout_weight="1"
                     android:background="@drawable/roundedtextview"
+                    android:enabled="false"
                     android:imeOptions="actionNext"
                     android:inputType="text"
                     android:maxLines="1"
@@ -126,6 +128,7 @@
                     android:layout_marginBottom="10dp"
                     android:layout_weight="1"
                     android:background="@drawable/roundedtextview"
+                    android:enabled="false"
                     android:imeOptions="actionNext"
                     android:inputType="textPassword"
                     android:maxLines="1"
@@ -133,6 +136,15 @@
                     android:text=""
                     android:textColor="@android:color/white"
                     tools:ignore="SpeakableTextPresentCheck" />
+
+                <Button
+                    android:id="@+id/sendSettingsToEsp32"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:onClick="sendSettingsToEsp32"
+                    android:text="send settings to esp32" />
             </LinearLayout>
         </ScrollView>
     </RelativeLayout>
