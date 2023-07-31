@@ -12,7 +12,8 @@ public class MainActivity extends AppCompatActivity {
 
     //TODO: Test wifi connection based on settings
     //TODO: encrypt wifi password in database and hide when entering in settings
-    //TODO: Bluetooth connection with esp32 to exchange data
+    //TODO: Bluetooth connection with esp32 to exchange data (send data, and receive if they were received correctly)
+    //TODO: add disconnected animation when the phone cannot get data from esp32 for 30 seconds
 
     private ApiFetcher apiFetcher;
 
