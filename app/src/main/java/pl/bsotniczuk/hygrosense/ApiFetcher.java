@@ -39,9 +39,9 @@ public class ApiFetcher {
         this.humidity = humidity;
     }
 
-    public void fetchApiDataInfo() {
+    public void fetchApiDataInfo(String ipAddress) {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.16/")
+                .baseUrl(ipAddress)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
