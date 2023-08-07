@@ -9,6 +9,7 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="sea_blue">#99d9ff</color>
+    <color name="sea_blue_dark">#89c3e5</color>
     <color name="sea_blue_light">#c0edff</color>
     <color name="sea_green">#e0fffe</color>
     <color name="air_gray">#eaeaea</color>

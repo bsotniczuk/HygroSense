@@ -22,7 +22,6 @@
             android:minHeight="?actionBarSize"
             android:text="@string/activity_settings"
             android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title" />
-        
     </androidx.appcompat.widget.Toolbar>
 
     <RelativeLayout
@@ -293,9 +292,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
+                    android:layout_marginBottom="8dp"
                     android:onClick="sendSettingsToEsp32"
                     android:enabled="false"
-                    android:text="send settings to esp32" />
+                    android:focusable="true"
+                    android:textAllCaps="false"
+                    android:background="@drawable/rounded_rectangle"
+                    android:text="@string/send_settings_to_esp32" />
 
                 <Button
                     android:id="@+id/connectToEsp32AccessPoint"
@@ -303,6 +306,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
+                    android:focusable="true"
+                    android:textAllCaps="false"
+                    android:background="@drawable/rounded_rectangle"
+                    android:visibility="gone"
                     android:text="connectToEsp32AccessPoint" />
 
                 <Button
@@ -311,6 +318,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
+                    android:focusable="true"
+                    android:textAllCaps="false"
+                    android:background="@drawable/rounded_rectangle"
+                    android:visibility="gone"
                     android:text="connectToEsp32ViaInternet" />
             </LinearLayout>
         </ScrollView>
