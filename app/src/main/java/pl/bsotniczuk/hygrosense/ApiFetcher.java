@@ -51,15 +51,12 @@ public class ApiFetcher {
         call.enqueue(new Callback<SensorData>() {
             @Override
             public void onResponse(Call<SensorData> call, Response<SensorData> response) {
-                if (response.code() == 200) { //HTTP Code 200 equals to OK
+                if (response.code() == 200) {
                     setTemperature(response.body().getTemperature());
                     setHumidity(response.body().getHumidity());
                     String deviceName = response.body().getDeviceName();
 
-                    SensorData sensorData = new SensorData();
-                    sensorData.setTemperature(response.body().getTemperature());
-                    sensorData.setTemperature(response.body().getHumidity());
-                    sensorData.setDeviceName(response.body().getDeviceName());
+                    SensorData sensorData = response.body();
 
                     Log.i("HygroSense", "Data fetched, temp: " + getTemperature() +
                             " | humidity: " + getHumidity() + " | deviceName: " + deviceName);

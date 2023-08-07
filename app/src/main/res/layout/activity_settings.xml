@@ -22,6 +22,7 @@
             android:minHeight="?actionBarSize"
             android:text="@string/activity_settings"
             android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title" />
+        
     </androidx.appcompat.widget.Toolbar>
 
     <RelativeLayout

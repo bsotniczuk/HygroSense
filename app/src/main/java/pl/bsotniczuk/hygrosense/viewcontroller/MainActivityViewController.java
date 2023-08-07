@@ -10,10 +10,8 @@ import pl.bsotniczuk.hygrosense.ConnectionType;
 import pl.bsotniczuk.hygrosense.HygroEventListener;
 import pl.bsotniczuk.hygrosense.MainActivity;
 import pl.bsotniczuk.hygrosense.R;
-import pl.bsotniczuk.hygrosense.aws.AwsIotCoreIntegration;
 import pl.bsotniczuk.hygrosense.controller.DatabaseController;
 import pl.bsotniczuk.hygrosense.controller.ToolbarMainActivityController;
-import pl.bsotniczuk.hygrosense.data.model.SettingsItem;
 import pl.bsotniczuk.hygrosense.model.SensorData;
 
 public class MainActivityViewController implements HygroEventListener {
@@ -24,10 +22,7 @@ public class MainActivityViewController implements HygroEventListener {
     TextView humidityValueTextView;
 
     public static DatabaseController databaseController;
-    public static String ipAddress = ""; //TODO: I think it can be deleted
-//    public static SettingsItem settingsItem;
     private boolean wasConnectionEstablished;
-    public static SensorData sensorData;
 
     public MainActivityViewController(
             MainActivity mainActivity
@@ -48,6 +43,8 @@ public class MainActivityViewController implements HygroEventListener {
     @Override
     public void hygroDataChanged(SensorData sensorData) {
         Log.i("HygroSense", "hygro data changed");
+        Log.i("HygroSense", "sensorData temperature: " + sensorData.getTemperature());
+        Log.i("HygroSense", "sensorData humidity: " + sensorData.getHumidity());
         String temperatureText = "" + apiFetcher.getTemperature() + " \u2103";
         String humidityText = "" + apiFetcher.getHumidity() + " %";
         temperatureValueTextView.setText(temperatureText);

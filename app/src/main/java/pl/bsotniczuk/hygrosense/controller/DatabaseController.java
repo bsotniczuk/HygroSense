@@ -39,8 +39,6 @@ public class DatabaseController {
                 if (settingsItem.getConnection_type() == ConnectionType.AWS_IOT_CORE) {
                     setupIotCoreIntegration(hygroEventListener, settingsItem);
                 }
-
-                MainActivityViewController.ipAddress = settingsItem.getEsp32_ip_address_access_point();
                 Log.i("HygroSense Db", "settings: wifi_ssid: " + settingsItem.getWifi_ssid() + " | esp32ipAddress:" + settingsItem.getEsp32_ip_address_access_point() + " | toString: " + settingsItem.toString());
             }
             else {
@@ -48,7 +46,6 @@ public class DatabaseController {
                 this.appDatabase = Room.databaseBuilder(this.mainActivity.getApplicationContext(),
                         AppDatabase.class, DbConstants.DATABASE_NAME).build();
                 SettingsItem settingsItemInit = new SettingsItem(0, "http://192.168.4.1/", "", "", "anywz7kwswoml-ats.iot.eu-north-1.amazonaws.com","ESP32-Access-Point", "", ConnectionType.AWS_IOT_CORE, "");
-                MainActivityViewController.ipAddress = settingsItemInit.getEsp32_ip_address_access_point();
                 settingsViewModel.createSettingsItem(settingsItemInit);
             }
         };
