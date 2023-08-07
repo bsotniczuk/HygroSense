@@ -45,7 +45,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/ipAddressText"
+                    android:id="@+id/awsEndpointAddressText"
                     style="@style/TextView"
                     android:layout_width="match_parent"
                     android:layout_height="30dp"
@@ -53,7 +53,153 @@
                     android:layout_marginEnd="25dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="5dp"
-                    android:text="@string/ip_address_of_the_esp32"
+                    android:text="@string/aws_endpoint_address"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/awsEndpointAddressEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/roundedtextview"
+                    android:enabled="false"
+                    android:imeOptions="actionNext"
+                    android:inputType="text"
+                    android:maxLines="2"
+                    android:paddingLeft="10dp"
+                    android:text=""
+                    android:textColor="@android:color/white"
+                    android:textCursorDrawable="@drawable/cursor"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
+                <TextView
+                    android:id="@+id/wifiAccessPointSsidText"
+                    style="@style/TextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginEnd="25dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:text="@string/wifi_ssid_access_point_name"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/wifiAccessPointSsidEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/roundedtextview"
+                    android:enabled="false"
+                    android:imeOptions="actionNext"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:paddingLeft="10dp"
+                    android:text=""
+                    android:textColor="@android:color/white"
+                    android:textCursorDrawable="@drawable/cursor"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
+                <TextView
+                    android:id="@+id/wifiPasswordAccessPointText"
+                    style="@style/TextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginEnd="25dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:text="@string/wifi_password_access_point"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/wifiPasswordAccessPointEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/roundedtextview"
+                    android:enabled="false"
+                    android:imeOptions="actionNext"
+                    android:inputType="textPassword"
+                    android:maxLines="1"
+                    android:paddingLeft="10dp"
+                    android:text=""
+                    android:textColor="@android:color/white"
+                    android:textCursorDrawable="@drawable/cursor"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
+                <TextView
+                    android:id="@+id/toggleApMode"
+                    style="@style/TextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginEnd="25dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:text="@string/connection_type"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:textSize="18sp" />
+
+                <LinearLayout
+                    android:id="@+id/LinearLayout02"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="horizontal">
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/toggleApModeSwitch"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="24dp"
+                        android:layout_weight="1"
+                        android:onClick="switchClicked"
+                        android:switchMinWidth="60dp"
+                        android:text="AWS Mode"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/textRegular"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="1.4"
+                        android:maxLines="1"
+                        android:onClick="textClicked"
+                        android:paddingLeft="1dp"
+                        android:paddingTop="8dp"
+                        android:text="AP Mode"
+                        android:textAlignment="center"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                        android:textSize="18sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/ipAddressText"
+                    style="@style/TextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="25dp"
+                    android:layout_marginBottom="5dp"
+                    android:text="@string/ip_address_of_the_esp32_access_point"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     android:textSize="18sp" />
 
@@ -73,6 +219,7 @@
                     android:paddingLeft="10dp"
                     android:text=""
                     android:textColor="@android:color/white"
+                    android:textCursorDrawable="@drawable/cursor"
                     tools:ignore="SpeakableTextPresentCheck" />
 
                 <TextView
@@ -104,6 +251,7 @@
                     android:paddingLeft="10dp"
                     android:text=""
                     android:textColor="@android:color/white"
+                    android:textCursorDrawable="@drawable/cursor"
                     tools:ignore="SpeakableTextPresentCheck" />
 
                 <TextView
@@ -135,6 +283,7 @@
                     android:paddingLeft="10dp"
                     android:text=""
                     android:textColor="@android:color/white"
+                    android:textCursorDrawable="@drawable/cursor"
                     tools:ignore="SpeakableTextPresentCheck" />
 
                 <Button
@@ -144,7 +293,24 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
                     android:onClick="sendSettingsToEsp32"
+                    android:enabled="false"
                     android:text="send settings to esp32" />
+
+                <Button
+                    android:id="@+id/connectToEsp32AccessPoint"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:text="connectToEsp32AccessPoint" />
+
+                <Button
+                    android:id="@+id/connectToEsp32ViaInternet"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:text="connectToEsp32ViaInternet" />
             </LinearLayout>
         </ScrollView>
     </RelativeLayout>

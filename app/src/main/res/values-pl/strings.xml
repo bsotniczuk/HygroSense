@@ -5,11 +5,22 @@
     <string name="remote_name">ESP32 z sensorem DHT22</string>
     <string name="temperature">Temperatura</string>
     <string name="humidity">Wilgotność</string>
+
     <string name="action_settings">Ustawienia</string>
     <string name="connecting">Łączenie</string>
     <string name="ip_address_of_the_esp32">IP urządzenia pomiarowego</string>
+    <string name="aws_endpoint_address">Endpoint AWS IoT</string>
+    <string name="ip_address_of_the_esp32_access_point">IP urządzenia pomiarowego (Access Point)</string>
+
     <string name="wifi_ssid_name">WiFi SSID (nazwa)</string>
+    <string name="wifi_ssid_access_point_name">WiFi Access Point SSID (nazwa)</string>
     <string name="wifi_password">Hasło do WiFi</string>
+    <string name="wifi_password_access_point">Hasło do WiFi Access Point</string>
+
     <string name="action_info">info</string>
     <string name="action_bluetooth">bluetooth</string>
+    <string name="access_point_mode">AP Mode Selected\nLocally connecting to the ESP32</string>
+    <string name="aws_mode_station_mode">AWS Station Mode Selected\nAWS IoT Core connection to ESP32</string>
+    <string name="connection_type">Wybierz typ połączenia</string>
+    <string name="aws_unreachable">AWS niedostępny, sprawdź ustawienia</string>
 </resources>
