@@ -19,8 +19,8 @@ public class ApiFetcher {
     private Float humidity = 0f;
     private List<HygroEventListener> listeners = new ArrayList<HygroEventListener>();
 
-    public void addListener(HygroEventListener toAdd) {
-        listeners.add(toAdd);
+    public void addListener(HygroEventListener hygroEventListener) {
+        listeners.add(hygroEventListener);
     }
 
     public Float getTemperature() {
@@ -56,11 +56,16 @@ public class ApiFetcher {
                     setHumidity(response.body().getHumidity());
                     String deviceName = response.body().getDeviceName();
 
+                    SensorData sensorData = new SensorData();
+                    sensorData.setTemperature(response.body().getTemperature());
+                    sensorData.setTemperature(response.body().getHumidity());
+                    sensorData.setDeviceName(response.body().getDeviceName());
+
                     Log.i("HygroSense", "Data fetched, temp: " + getTemperature() +
                             " | humidity: " + getHumidity() + " | deviceName: " + deviceName);
 
                     for (HygroEventListener hl : listeners)
-                        hl.hygroDataChanged();
+                        hl.hygroDataChanged(sensorData);
                 }
             }
 

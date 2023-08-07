@@ -111,6 +111,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:onClick="addToSettingsDb"
+            android:visibility="gone"
             android:text="addToSettingsDb" />
 
         <Button
@@ -122,6 +123,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:onClick="deleteDb"
+            android:visibility="gone"
             android:text="deleteDb" />
 
         <Button
@@ -133,6 +135,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:onClick="readSettingsItem"
+            android:visibility="gone"
             android:text="readSettingsItem" />
 
         <Button
@@ -144,6 +147,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:onClick="launchSettings"
+            android:visibility="gone"
             android:text="launchSettings" />
 
         <TextView

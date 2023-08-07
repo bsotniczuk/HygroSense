@@ -6,11 +6,15 @@ import android.util.Log;
 import android.widget.TextView;
 
 import pl.bsotniczuk.hygrosense.ApiFetcher;
+import pl.bsotniczuk.hygrosense.ConnectionType;
 import pl.bsotniczuk.hygrosense.HygroEventListener;
 import pl.bsotniczuk.hygrosense.MainActivity;
 import pl.bsotniczuk.hygrosense.R;
+import pl.bsotniczuk.hygrosense.aws.AwsIotCoreIntegration;
 import pl.bsotniczuk.hygrosense.controller.DatabaseController;
 import pl.bsotniczuk.hygrosense.controller.ToolbarMainActivityController;
+import pl.bsotniczuk.hygrosense.data.model.SettingsItem;
+import pl.bsotniczuk.hygrosense.model.SensorData;
 
 public class MainActivityViewController implements HygroEventListener {
 
@@ -20,18 +24,21 @@ public class MainActivityViewController implements HygroEventListener {
     TextView humidityValueTextView;
 
     public static DatabaseController databaseController;
-    public static String ipAddress = "";
+    public static String ipAddress = ""; //TODO: I think it can be deleted
+//    public static SettingsItem settingsItem;
     private boolean wasConnectionEstablished;
+    public static SensorData sensorData;
 
     public MainActivityViewController(
-            MainActivity mainActivity,
-            ApiFetcher apiFetcher
+            MainActivity mainActivity
             ) {
         this.mainActivity = mainActivity;
-        databaseController = new DatabaseController(this.mainActivity);
-        this.apiFetcher = apiFetcher;
         this.temperatureValueTextView = this.mainActivity.findViewById(R.id.temperatureValueTextView);
         this.humidityValueTextView = this.mainActivity.findViewById(R.id.humidityValueTextView);
+        databaseController = new DatabaseController(this.mainActivity);
+        databaseController.initDbAndSetupAwsIotCoreConnection(this);
+        this.apiFetcher = new ApiFetcher();
+        this.apiFetcher.addListener(this);
 
         new ToolbarMainActivityController(this.mainActivity, this.mainActivity.findViewById(R.id.toolbar));
 
@@ -39,10 +46,23 @@ public class MainActivityViewController implements HygroEventListener {
     }
 
     @Override
-    public void hygroDataChanged() {
+    public void hygroDataChanged(SensorData sensorData) {
         Log.i("HygroSense", "hygro data changed");
         String temperatureText = "" + apiFetcher.getTemperature() + " \u2103";
         String humidityText = "" + apiFetcher.getHumidity() + " %";
+        temperatureValueTextView.setText(temperatureText);
+        humidityValueTextView.setText(humidityText);
+
+        if (!this.wasConnectionEstablished) {
+            connectionEstablished();
+        }
+    }
+
+    @Override
+    public void hygroDataChangedAws(SensorData sensorData) {
+        Log.i("HygroSense", "AWS hygro data changed");
+        String temperatureText = "" + sensorData.getTemperature() + " \u2103";
+        String humidityText = "" + sensorData.getHumidity() + " %";
         temperatureValueTextView.setText(temperatureText);
         humidityValueTextView.setText(humidityText);
 
@@ -55,19 +75,24 @@ public class MainActivityViewController implements HygroEventListener {
         Thread t = new Thread() {
             @Override
             public void run() {
-                while (!isInterrupted()) {
-                    try {
-                        Thread.sleep(3000);  //1000ms = 1 sec
-                        mainActivity.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                apiFetcher.fetchApiDataInfo(ipAddress);
+            while (!isInterrupted()) {
+                try {
+                    Thread.sleep(3000);  //1000ms = 1 sec
+                    mainActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (DatabaseController.settingsItem.getConnection_type() == ConnectionType.ACCESS_POINT) {
+                                apiFetcher.fetchApiDataInfo(DatabaseController.settingsItem.getEsp32_ip_address_access_point());
                             }
-                        });
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                            else {
+                                interrupt();
+                            }
+                        }
+                    });
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
+            }
             }
         };
         t.start();
