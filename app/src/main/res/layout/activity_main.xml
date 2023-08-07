@@ -36,14 +36,14 @@
             android:id="@+id/deviceInfoLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/remoteNameTextView"
                 style="@style/TextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginBottom="8dp"
                 android:text="@string/remote_name"
                 android:textAlignment="center"
@@ -59,8 +59,8 @@
 
             <ImageView
                 android:id="@+id/temperatureImageView"
-                android:layout_width="118dp"
-                android:layout_height="157dp"
+                android:layout_width="130dp"
+                android:layout_height="160dp"
                 android:src="@drawable/thermometer_svg" />
 
             <TextView
@@ -68,8 +68,8 @@
                 style="@style/TextView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp"
                 android:gravity="center"
                 android:text="@string/temperature"
                 android:textAlignment="center"
@@ -85,8 +85,8 @@
 
             <ImageView
                 android:id="@+id/humidityImageView"
-                android:layout_width="133dp"
-                android:layout_height="165dp"
+                android:layout_width="130dp"
+                android:layout_height="160dp"
                 android:src="@drawable/humidity_svg" />
 
             <TextView
@@ -94,8 +94,8 @@
                 style="@style/TextView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp"
                 android:gravity="center"
                 android:text="@string/humidity"
                 android:textAlignment="center"
@@ -134,6 +134,17 @@
             android:layout_marginRight="8dp"
             android:onClick="readSettingsItem"
             android:text="readSettingsItem" />
+
+        <TextView
+            android:id="@+id/connectionTextView"
+            style="@style/TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorConnecting"
+            android:text="@string/connecting"
+            android:textAlignment="center"
+            android:layout_alignParentBottom="true"
+            android:textSize="16sp" />
 
     </RelativeLayout>
 
