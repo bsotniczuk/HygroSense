@@ -23,4 +23,5 @@
     <string name="aws_mode_station_mode">AWS Station Mode Selected\nAWS IoT Core connection to ESP32</string>
     <string name="connection_type">Wybierz typ połączenia</string>
     <string name="aws_unreachable">AWS niedostępny, sprawdź ustawienia</string>
+    <string name="send_settings_to_esp32">Wyślij ustawienia do ESP32</string>
 </resources>
