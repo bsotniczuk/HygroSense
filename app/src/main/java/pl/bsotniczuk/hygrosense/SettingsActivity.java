@@ -68,7 +68,7 @@ public class SettingsActivity extends AppCompatActivity {
                 Log.i("HygroSense Db Settings", "settings: wifi_ssid: " + settingsItem.getWifi_ssid() + " | esp32ipAddress:" + settingsItem.getEsp32_ip_address_access_point() + " | toString: " + settingsItem.toString());
             }
             else {
-                Log.i("HygroSense Db", "I think that the database is non existant");
+                Log.i("HygroSense Db", "Database is non existant");
             }
         };
         settingsViewModel.getSettingsItem().observe(this, settingsObserver);

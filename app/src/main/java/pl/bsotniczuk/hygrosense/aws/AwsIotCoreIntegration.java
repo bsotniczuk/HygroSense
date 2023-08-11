@@ -22,6 +22,11 @@ public class AwsIotCoreIntegration {
         String privateKeyFile = "private_key_hygrosense.pem.key"; // PKCS#1 or PKCS#8 PEM encoded private key file
 
         SampleUtil.KeyStorePasswordPair pair = SampleUtil.getKeyStorePasswordPair(mainActivity, certificateFile, privateKeyFile);
+        if (pair == null) {
+            TextView connectionTextView = mainActivity.findViewById(R.id.connectionTextView);
+            connectionTextView.setText(R.string.wrong_aws_certificates);
+            return;
+        }
         AWSIotMqttClient client = new AWSIotMqttClient(clientEndpoint, clientId, pair.keyStore, pair.keyPassword);
 
         String topicName = "hygrosense/pub";

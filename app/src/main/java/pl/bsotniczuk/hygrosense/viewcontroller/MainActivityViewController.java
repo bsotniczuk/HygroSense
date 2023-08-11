@@ -42,22 +42,17 @@ public class MainActivityViewController implements HygroEventListener {
 
     @Override
     public void hygroDataChanged(SensorData sensorData) {
-        Log.i("HygroSense", "hygro data changed");
-        Log.i("HygroSense", "sensorData temperature: " + sensorData.getTemperature());
-        Log.i("HygroSense", "sensorData humidity: " + sensorData.getHumidity());
-        String temperatureText = "" + apiFetcher.getTemperature() + " \u2103";
-        String humidityText = "" + apiFetcher.getHumidity() + " %";
-        temperatureValueTextView.setText(temperatureText);
-        humidityValueTextView.setText(humidityText);
-
-        if (!this.wasConnectionEstablished) {
-            connectionEstablished();
-        }
+        Log.i("HygroSense", "AP Mode: hygro data changed");
+        displaySensorData(sensorData);
     }
 
     @Override
     public void hygroDataChangedAws(SensorData sensorData) {
-        Log.i("HygroSense", "AWS hygro data changed");
+        Log.i("HygroSense", "AWS Mode: hygro data changed");
+        displaySensorData(sensorData);
+    }
+
+    private void displaySensorData(SensorData sensorData) {
         String temperatureText = "" + sensorData.getTemperature() + " \u2103";
         String humidityText = "" + sensorData.getHumidity() + " %";
         temperatureValueTextView.setText(temperatureText);
