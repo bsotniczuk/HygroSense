@@ -91,7 +91,7 @@ public class SampleUtil {
 
         final List<Certificate> certChain = loadCertificatesFromFile(mainActivity, certificateFile);
 
-        if (certChain == null || privateKey == null) return null;
+        if (certChain == null || certChain.size() == 0 || privateKey == null) return null;
 
         return getKeyStorePasswordPair(certChain, privateKey);
     }

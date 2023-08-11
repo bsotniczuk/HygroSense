@@ -42,7 +42,7 @@ public class DatabaseController {
                 Log.i("HygroSense Db", "settings: wifi_ssid: " + settingsItem.getWifi_ssid() + " | esp32ipAddress:" + settingsItem.getEsp32_ip_address_access_point() + " | toString: " + settingsItem.toString());
             }
             else {
-                Log.i("HygroSense Db", "I think that database is non existant");
+                Log.i("HygroSense Db", "Database is non existant");
                 this.appDatabase = Room.databaseBuilder(this.mainActivity.getApplicationContext(),
                         AppDatabase.class, DbConstants.DATABASE_NAME).build();
                 SettingsItem settingsItemInit = new SettingsItem(0, "http://192.168.4.1/", "", "", "anywz7kwswoml-ats.iot.eu-north-1.amazonaws.com","ESP32-Access-Point", "", ConnectionType.AWS_IOT_CORE, "");

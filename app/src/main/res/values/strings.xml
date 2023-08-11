@@ -23,4 +23,5 @@
     <string name="connection_type">Select a connection type</string>
     <string name="aws_unreachable">AWS unreachable, check settings</string>
     <string name="send_settings_to_esp32">Send settings to the ESP32</string>
+    <string name="wrong_aws_certificates">Wrong AWS certificates provided</string>
 </resources>

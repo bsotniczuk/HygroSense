@@ -26,7 +26,4 @@ interface SettingsDao {
     @Query("SELECT * FROM ${DbConstants.SETTINGS_TABLE_NAME} ORDER BY id ASC")
     fun readAllData(): LiveData<List<SettingsItem>>
 
-    @Query("SELECT * FROM ${DbConstants.SETTINGS_TABLE_NAME} LIMIT 1")
-    fun readAnySetting(): List<SettingsItem>
-
 }

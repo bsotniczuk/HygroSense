@@ -145,9 +145,8 @@ void connectToWiFiAndRunServer(const char* ssid, const char* password) {
 
   //ping
   bool success = Ping.ping("www.google.com", 3);
-  if(!success){
+  if (!success) {
     Serial.println("Ping failed");
-    return;
   }
   Serial.println("Ping successful.");
 
@@ -167,17 +166,14 @@ void connectToAwsIot() {
   client.setCallback(messageHandler);
  
   Serial.println("Connecting to AWS IOT");
- 
   while (!client.connect(THINGNAME)) {
     Serial.print(".");
     delay(100);
   }
- 
   if (!client.connected()) {
     Serial.println("AWS IoT Timeout!");
     return;
   }
- 
   // Subscribe to a topic
   client.subscribe(AWS_IOT_SUBSCRIBE_TOPIC);
  
