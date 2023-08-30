@@ -9,16 +9,12 @@
 #include <PubSubClient.h>
 #include <ArduinoJson.h>
 
-#include <ESP32Ping.h>
-
 //EEPROM
 #include <EEPROM.h>
 #define eepromTextVariableSize 33 // the max size of the ssid, password etc. 32+null terminated
 
 #define DHTPIN 33
 #define DHTTYPE DHT22
-
-#define BUTTON_PIN 0 //GPIO0, boot button
 
 #define AWS_IOT_PUBLISH_TOPIC   "hygrosense/pub"
 #define AWS_IOT_SUBSCRIBE_TOPIC "hygrosense/sub"
@@ -143,13 +139,6 @@ void connectToWiFiAndRunServer(const char* ssid, const char* password) {
   }
   Serial.println(WiFi.localIP());
 
-  //ping
-  bool success = Ping.ping("www.google.com", 3);
-  if (!success) {
-    Serial.println("Ping failed");
-  }
-  Serial.println("Ping successful.");
-
   connectToAwsIot();
 }
 
@@ -203,16 +192,16 @@ void publishMessageToAwsIot(String humidity, String temperature) {
 #define eepromBufferSize 200
 
 void saveSettingsToEEPPROM(char* ssid_, char* pass_) {
-  Serial.println("\n============ saveSettingsToEEPPROM");
+  Serial.println("\n saveSettingsToEEPPROM");
   writeEEPROM(1 * eepromTextVariableSize, eepromTextVariableSize, ssid_);
   writeEEPROM(2 * eepromTextVariableSize, eepromTextVariableSize,  pass_);
 }
 
 void readSettingsFromEEPROM(char* ssid_, char* pass_) {
-  readEEPROM( 1 * eepromTextVariableSize, eepromTextVariableSize, ssid_);
-  readEEPROM( (2 * eepromTextVariableSize), eepromTextVariableSize, pass_);
+  readEEPROM(1 * eepromTextVariableSize, eepromTextVariableSize, ssid_);
+  readEEPROM(2 * eepromTextVariableSize, eepromTextVariableSize, pass_);
 
-  Serial.println("\n============ readSettingsFromEEPROM");
+  Serial.println("\n readSettingsFromEEPROM");
   Serial.println(ssid_);
   Serial.println(pass_);
 }
@@ -236,7 +225,6 @@ void readEEPROM(int startAdr, int maxLength, char* dest) {
 void setup() {
   Serial.begin(115200);
   while (!Serial) {}
-  pinMode(BUTTON_PIN, INPUT);
 
   dht.begin();
 
@@ -247,11 +235,13 @@ void setup() {
     Serial.println(F("Target is 'nan' so run wifi with empty values."));
     connectToWiFiAndRunServer("", "");
   }
-  readSettingsFromEEPROM(_ssid, _password);
-  Serial.println(_ssid);
-  Serial.println(_password); //to delete, exposes password
+  else {
+    readSettingsFromEEPROM(_ssid, _password);
+    Serial.println(_ssid);
+    Serial.println(_password); //to delete, exposes password
 
-  connectToWiFiAndRunServer(_ssid, _password);
+    connectToWiFiAndRunServer(_ssid, _password);
+  }
 }
 
 void loop() {
