@@ -14,6 +14,8 @@
 #define eepromTextVariableSize 33 // the max size of the ssid, password etc. 32+null terminated
 
 #define DHTPIN 33
+#define DHTPIN1 32
+#define DHTPIN2 26
 #define DHTTYPE DHT22
 
 #define AWS_IOT_PUBLISH_TOPIC   "hygrosense/pub"
@@ -27,33 +29,24 @@ const char* passwordAccessPoint = "HygroSenseApp1234";
 
 float Target;
 
-DHT dht(DHTPIN, DHTTYPE);
+DHT dhtArray[] = {
+  DHT(DHTPIN, DHTTYPE),
+  DHT(DHTPIN1, DHTTYPE),
+  DHT(DHTPIN2, DHTTYPE)
+};
+
 AsyncWebServer server(80);
 
 WiFiClientSecure net = WiFiClientSecure();
 PubSubClient client(net);
 
-String readDHTTemperature() {
-  float t = dht.readTemperature();
+float readPrimitive(float t) {
   if (isnan(t)) {
     Serial.println("Failed to read from DHT sensor!");
-    return "-";
+    return -300.0;
   }
   else {
-    Serial.println(t);
-    return String(t);
-  }
-}
-
-String readDHTHumidity() {
-  float h = dht.readHumidity();
-  if (isnan(h)) {
-    Serial.println("Failed to read from DHT sensor!");
-    return "-";
-  }
-  else {
-    Serial.println(h);
-    return String(h);
+    return t;
   }
 }
 
@@ -121,13 +114,7 @@ void connectToWiFiAndRunServer(const char* ssid, const char* password) {
 
   server.on("/config", HTTP_POST, configPostEndpoint);
   server.on("/data", HTTP_GET, [](AsyncWebServerRequest *request) {
-    String json = "{";
-    json += "\"temperature\":"+String(readDHTTemperature().c_str());
-    json += ",\"humidity\":"+String(readDHTHumidity().c_str());
-    json += ",\"deviceName\":\""+String("ESP32")+"\"";
-    json += "}";
-    request->send(200, "application/json", json);
-    json = String();
+    request->send(200, "application/json", publishMessageToApEndpoint());
   });
   server.begin();
 
@@ -179,14 +166,52 @@ void messageHandler(char* topic, byte* payload, unsigned int length) {
   Serial.println(message);
 }
 
-void publishMessageToAwsIot(String humidity, String temperature) {
+String publishMessageToApEndpoint() {
+  return publishMessage(false);
+}
+
+void publishMessageToAwsIot() {
+  publishMessage(true);
+}
+
+String publishMessage(boolean isPublishedToAws) {
   StaticJsonDocument<200> doc;
-  doc["temperature"] = temperature;
-  doc["humidity"] = humidity;
-  char jsonBuffer[512];
-  serializeJson(doc, jsonBuffer); // print to client
- 
-  client.publish(AWS_IOT_PUBLISH_TOPIC, jsonBuffer);
+
+	JsonArray array = doc.to<JsonArray>();
+  JsonObject nested_object;
+  float temperatureFloat, humidityFloat;
+
+  for (byte i = 0; i < (sizeof(dhtArray) / sizeof(dhtArray[0])); i++) {
+    nested_object = array.createNestedObject();
+    temperatureFloat = readPrimitive(dhtArray[i].readTemperature());
+    humidityFloat = readPrimitive(dhtArray[i].readHumidity());
+    nested_object["id"] = i;
+    nested_object["temperature"] = temperatureFloat;
+    nested_object["humidity"] = humidityFloat;
+
+    debugSensorData(i, temperatureFloat, humidityFloat);
+  }
+
+  if (isPublishedToAws) {
+    char jsonBuffer[512];
+    serializeJson(array, jsonBuffer);
+    client.publish(AWS_IOT_PUBLISH_TOPIC, jsonBuffer);
+    return "";
+  }
+  else {
+    String toReturn;
+    serializeJson(array, toReturn);
+    return toReturn;
+  }
+}
+
+void debugSensorData(byte i, float temperatureFloat, float humidityFloat) {
+  Serial.print("\nSensor number: ");
+  Serial.println(i);
+  Serial.print("Temperature: ");
+  Serial.println(String(temperatureFloat));
+  Serial.print("Humidity: ");
+  Serial.println(String(humidityFloat));
 }
 
 #define eepromBufferSize 200
@@ -226,7 +251,9 @@ void setup() {
   Serial.begin(115200);
   while (!Serial) {}
 
-  dht.begin();
+  for (auto& sensor : dhtArray) {
+    sensor.begin();
+  }
 
   //in case EEPROM is empty on first launch
   EEPROM.get(0, Target);
@@ -245,7 +272,7 @@ void setup() {
 }
 
 void loop() {
-  publishMessageToAwsIot(readDHTHumidity(), readDHTTemperature());
+  publishMessageToAwsIot();
   client.loop();
   delay(6000); //change to 2000 -> 2s
 }

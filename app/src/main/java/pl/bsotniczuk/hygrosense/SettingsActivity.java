@@ -1,5 +1,14 @@
 package pl.bsotniczuk.hygrosense;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import java.util.concurrent.TimeUnit;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.lifecycle.Observer;
@@ -16,16 +25,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-
-import android.app.ActivityOptions;
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.Toast;
-
-import java.util.concurrent.TimeUnit;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -228,19 +227,18 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     @Override
+    public void finish() {
+        super.finish();
+        this.overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+    }
+
+    @Override
     public void onBackPressed() {
         super.onBackPressed();
-//        startActivity(MainActivity.class);
         Intent intent = new Intent(this.getApplicationContext(), MainActivity.class);
 //        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         checkIfSettingsChanged(settingsItem);
-
-        this.startActivity(intent,
-                ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
-        this.finishAfterTransition();
-//        this.startActivity(intent);
-//        this.finish();
     }
 }

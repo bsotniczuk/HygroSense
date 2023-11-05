@@ -7,5 +7,5 @@ import retrofit2.http.GET;
 public interface SensorDataApi {
 
     @GET("data")
-    Call<SensorData> getSensorData();
+    Call<SensorData[]> getSensorData();
 }

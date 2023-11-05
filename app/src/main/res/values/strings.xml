@@ -1,12 +1,14 @@
 <resources>
     <string name="app_name">HygroSense</string>
     <string name="activity_settings">Settings</string>
+    <string name="activity_statistics">Statistics</string>
     <string name="remote_name">ESP32 with DHT22 Sensor</string>
     <string name="temperature">Temperature</string>
     <string name="humidity">Humidity</string>
 
     <string name="action_settings">Settings</string>
-    <string name="connecting">Connecting</string>
+    <string name="connecting">Connecting (AP)</string>
+    <string name="connecting_aws">Connecting (AWS)</string>
     <string name="ip_address_of_the_esp32">IP of the measurement system</string>
     <string name="aws_endpoint_address">AWS IoT Endpoint</string>
     <string name="ip_address_of_the_esp32_access_point">IP of the measurement system (Access Point)</string>
@@ -24,4 +26,6 @@
     <string name="aws_unreachable">AWS unreachable, check settings</string>
     <string name="send_settings_to_esp32">Send settings to the ESP32</string>
     <string name="wrong_aws_certificates">Wrong AWS certificates provided</string>
+    <string name="all_sensors">All sensors</string>
+    <string name="average">Average</string>
 </resources>

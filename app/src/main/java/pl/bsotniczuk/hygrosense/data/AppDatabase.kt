@@ -8,7 +8,7 @@ import androidx.room.TypeConverters
 import pl.bsotniczuk.hygrosense.data.dao.SettingsDao
 import pl.bsotniczuk.hygrosense.data.model.SettingsItem
 
-@Database(entities = [SettingsItem ::class], version = 1, exportSchema = false)
+@Database(entities = [SettingsItem::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
 

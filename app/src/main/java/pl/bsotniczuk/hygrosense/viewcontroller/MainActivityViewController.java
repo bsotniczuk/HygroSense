@@ -5,6 +5,8 @@ import android.graphics.drawable.TransitionDrawable;
 import android.util.Log;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
+
 import pl.bsotniczuk.hygrosense.ApiFetcher;
 import pl.bsotniczuk.hygrosense.ConnectionType;
 import pl.bsotniczuk.hygrosense.HygroEventListener;
@@ -20,9 +22,20 @@ public class MainActivityViewController implements HygroEventListener {
     ApiFetcher apiFetcher;
     TextView temperatureValueTextView;
     TextView humidityValueTextView;
+    TextView connectionTextView;
+
+    private static final float faultyValue = -275;
 
     public static DatabaseController databaseController;
     private boolean wasConnectionEstablished;
+    private boolean wasTemperatureOrHumidityValueTextViewClicked;
+
+    private String temperatureText;
+    private String humidityText;
+    private String temperatureTextAllSensors;
+    private String humidityTextAllSensors;
+
+    private static final DecimalFormat df = new DecimalFormat("0.00");
 
     public MainActivityViewController(
             MainActivity mainActivity
@@ -30,6 +43,7 @@ public class MainActivityViewController implements HygroEventListener {
         this.mainActivity = mainActivity;
         this.temperatureValueTextView = this.mainActivity.findViewById(R.id.temperatureValueTextView);
         this.humidityValueTextView = this.mainActivity.findViewById(R.id.humidityValueTextView);
+        this.connectionTextView = this.mainActivity.findViewById(R.id.connectionTextView);
         databaseController = new DatabaseController(this.mainActivity);
         databaseController.initDbAndSetupAwsIotCoreConnection(this);
         this.apiFetcher = new ApiFetcher();
@@ -37,30 +51,76 @@ public class MainActivityViewController implements HygroEventListener {
 
         new ToolbarMainActivityController(this.mainActivity, this.mainActivity.findViewById(R.id.toolbar));
 
+        temperatureValueTextView.setOnClickListener(v -> temperatureOrHumidityValueTextViewClick());
+        humidityValueTextView.setOnClickListener(v -> temperatureOrHumidityValueTextViewClick());
+
         refreshTextViewThread();
     }
 
-    @Override
-    public void hygroDataChanged(SensorData sensorData) {
-        Log.i("HygroSense", "AP Mode: hygro data changed");
-        displaySensorData(sensorData);
+    private void temperatureOrHumidityValueTextViewClick() {
+        wasTemperatureOrHumidityValueTextViewClicked = !wasTemperatureOrHumidityValueTextViewClicked;
+        setTemperatureAndHumidityValueTextViews();
+    }
+
+    private void setTemperatureAndHumidityValueTextViews() {
+        if (this.wasConnectionEstablished) {
+            if (!wasTemperatureOrHumidityValueTextViewClicked) {
+                mainActivity.runOnUiThread(() -> {
+                    temperatureValueTextView.setText(temperatureText);
+                    humidityValueTextView.setText(humidityText);
+                });
+            } else {
+                mainActivity.runOnUiThread(() -> {
+                    temperatureValueTextView.setText(temperatureTextAllSensors);
+                    humidityValueTextView.setText(humidityTextAllSensors);
+                });
+            }
+        }
     }
 
     @Override
-    public void hygroDataChangedAws(SensorData sensorData) {
+    public void hygroDataChanged(SensorData[] sensorData) {
         Log.i("HygroSense", "AWS Mode: hygro data changed");
-        displaySensorData(sensorData);
+        displaySensorDataMultipleSensors(sensorData);
     }
 
-    private void displaySensorData(SensorData sensorData) {
-        String temperatureText = "" + sensorData.getTemperature() + " \u2103";
-        String humidityText = "" + sensorData.getHumidity() + " %";
-        temperatureValueTextView.setText(temperatureText);
-        humidityValueTextView.setText(humidityText);
-
+    private void displaySensorDataMultipleSensors(SensorData[] sensorData) {
         if (!this.wasConnectionEstablished) {
             connectionEstablished();
         }
+        else if (connectionTextView.getText().length() > 0) {
+            mainActivity.runOnUiThread(() -> connectionTextView.setText(""));
+        }
+        setStringsToDisplay(sensorData);
+        setTemperatureAndHumidityValueTextViews();
+    }
+
+    private void setStringsToDisplay(SensorData[] sensorData) {
+        humidityTextAllSensors = temperatureTextAllSensors = mainActivity.getString(R.string.all_sensors) + "\n";
+        float temperatureAvg = 0;
+        float humidityAvg = 0;
+        int i = 0;
+        for (SensorData sensor : sensorData) {
+            if (sensor.getHumidity() > faultyValue || sensor.getTemperature() > faultyValue) {
+                setAllSensorDataStrings(sensor.getId(), df.format(sensor.getTemperature()), df.format(sensor.getHumidity()));
+                temperatureAvg += sensor.getTemperature();
+                humidityAvg += sensor.getHumidity();
+                i++;
+            } else {
+                setAllSensorDataStrings(sensor.getId(), "?", "?");
+            }
+        }
+        setAverageSensorDataStrings(temperatureAvg / i, humidityAvg / i);
+    }
+
+    private void setAverageSensorDataStrings(float temperatureAvg, float humidityAvg) {
+        temperatureText = mainActivity.getString(R.string.average) + "\n" + df.format(temperatureAvg) + " \u2103";
+        humidityText = mainActivity.getString(R.string.average) + "\n" + df.format(humidityAvg) + " %";
+    }
+
+    private void setAllSensorDataStrings(int id, String temperature, String humidity) {
+        temperatureTextAllSensors += id + " : " + temperature + " \u2103\n";
+        humidityTextAllSensors += id + " : " + humidity + " %\n";
     }
 
     public void refreshTextViewThread() {
@@ -90,9 +150,7 @@ public class MainActivityViewController implements HygroEventListener {
         t.start();
     }
 
-    public void connectionEstablished() {
-        TextView connectionTextView = mainActivity.findViewById(R.id.connectionTextView);
-
+    private void connectionEstablished() {
         ColorDrawable[] array = {
                 new ColorDrawable(mainActivity.getResources().getColor(R.color.colorConnecting)),
                 new ColorDrawable(mainActivity.getResources().getColor(R.color.colorConnectionEstablished))

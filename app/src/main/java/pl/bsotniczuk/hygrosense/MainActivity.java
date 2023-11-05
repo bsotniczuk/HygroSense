@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import pl.bsotniczuk.hygrosense.data.DbConstants;
 import pl.bsotniczuk.hygrosense.viewcontroller.MainActivityViewController;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -23,11 +22,5 @@ public class MainActivity extends AppCompatActivity {
 
     public void readSettingsItem(View view) {
         MainActivityViewController.databaseController.readSettingsItem();
-    }
-
-    public void launchSettings(View view) {
-        Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
-        startActivity(intent);
-        finish();
     }
 }
