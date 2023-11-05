@@ -1,12 +1,12 @@
 package pl.bsotniczuk.hygrosense.controller;
 
-import android.app.ActivityOptions;
 import android.content.Intent;
 
 import androidx.appcompat.widget.Toolbar;
 import pl.bsotniczuk.hygrosense.MainActivity;
 import pl.bsotniczuk.hygrosense.R;
 import pl.bsotniczuk.hygrosense.SettingsActivity;
+import pl.bsotniczuk.hygrosense.StatisticsActivity;
 
 public class ToolbarMainActivityController {
 
@@ -18,10 +18,15 @@ public class ToolbarMainActivityController {
 
                 Intent intent = new Intent(mainActivity.getApplicationContext(), SettingsActivity.class);
 //                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                mainActivity.startActivity(intent,
-                        ActivityOptions.makeSceneTransitionAnimation(mainActivity).toBundle());
-//                mainActivity.finishAfterTransition();
+                mainActivity.startActivity(intent);
+                mainActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            }
+            else if (id == R.id.action_statistics) {
 
+                Intent intent = new Intent(mainActivity.getApplicationContext(), StatisticsActivity.class);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                mainActivity.startActivity(intent);
+                mainActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
             return false;
         });

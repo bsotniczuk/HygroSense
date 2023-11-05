@@ -1,6 +1,7 @@
 package pl.bsotniczuk.hygrosense.controller;
 
 import android.util.Log;
+import android.widget.TextView;
 
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -8,12 +9,12 @@ import androidx.room.Room;
 import pl.bsotniczuk.hygrosense.ConnectionType;
 import pl.bsotniczuk.hygrosense.HygroEventListener;
 import pl.bsotniczuk.hygrosense.MainActivity;
+import pl.bsotniczuk.hygrosense.R;
 import pl.bsotniczuk.hygrosense.aws.AwsIotCoreIntegration;
 import pl.bsotniczuk.hygrosense.data.AppDatabase;
 import pl.bsotniczuk.hygrosense.data.DbConstants;
 import pl.bsotniczuk.hygrosense.data.model.SettingsItem;
 import pl.bsotniczuk.hygrosense.data.viewmodel.SettingsViewModel;
-import pl.bsotniczuk.hygrosense.viewcontroller.MainActivityViewController;
 
 public class DatabaseController {
 
@@ -36,8 +37,13 @@ public class DatabaseController {
             if (settingsItem != null) {
                 DatabaseController.settingsItem = settingsItem;
 
+                TextView connectionTextView = mainActivity.findViewById(R.id.connectionTextView);
                 if (settingsItem.getConnection_type() == ConnectionType.AWS_IOT_CORE) {
+                    mainActivity.runOnUiThread(() -> connectionTextView.setText(R.string.connecting_aws));
                     setupIotCoreIntegration(hygroEventListener, settingsItem);
+                }
+                else {
+                    mainActivity.runOnUiThread(() -> connectionTextView.setText(R.string.connecting));
                 }
                 Log.i("HygroSense Db", "settings: wifi_ssid: " + settingsItem.getWifi_ssid() + " | esp32ipAddress:" + settingsItem.getEsp32_ip_address_access_point() + " | toString: " + settingsItem.toString());
             }

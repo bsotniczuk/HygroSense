@@ -12,11 +12,10 @@ import java.util.List;
 
 import pl.bsotniczuk.hygrosense.HygroEventListener;
 import pl.bsotniczuk.hygrosense.model.SensorData;
-import pl.bsotniczuk.hygrosense.viewcontroller.MainActivityViewController;
 
 public class HygroSenseTopic extends AWSIotTopic {
 
-    private List<HygroEventListener> listeners = new ArrayList<HygroEventListener>();
+    private List<HygroEventListener> listeners = new ArrayList<>();
 
     public void addListener(HygroEventListener toAdd) {
         listeners.add(toAdd);
@@ -31,12 +30,12 @@ public class HygroSenseTopic extends AWSIotTopic {
         Log.i("HygroSense", "data received from Aws IoT core :)\n" + message.getStringPayload());
 
         Gson gson = new Gson();
-        SensorData awsSensorData = gson.fromJson(message.getStringPayload(), SensorData.class);
+        SensorData[] awsSensorData = gson.fromJson(message.getStringPayload(), SensorData[].class);
 
-        Log.i("HygroSense", "temperature: " + awsSensorData.getTemperature());
-        Log.i("HygroSense", "humidity: " + awsSensorData.getHumidity());
+        Log.i("HygroSense", "temperature: " + awsSensorData[0].getTemperature());
+        Log.i("HygroSense", "humidity: " + awsSensorData[0].getHumidity());
 
         for (HygroEventListener hl : listeners)
-            hl.hygroDataChangedAws(awsSensorData);
+            hl.hygroDataChanged(awsSensorData);
     }
 }

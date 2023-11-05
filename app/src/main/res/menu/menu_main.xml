@@ -5,6 +5,13 @@
     tools:context="pl.bsotniczuk.hygrosense.MainActivity">
 
     <item
+        android:id="@+id/action_statistics"
+        android:orderInCategory="100"
+        android:title="@string/action_settings"
+        android:icon="@drawable/ic_baseline_bar_chart_24"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="@string/action_settings"

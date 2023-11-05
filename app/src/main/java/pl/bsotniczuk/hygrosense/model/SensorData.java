@@ -2,11 +2,20 @@ package pl.bsotniczuk.hygrosense.model;
 
 public class SensorData {
 
+    private int id;
     private float temperature;
     private float humidity;
     private String deviceName;
 
     public SensorData() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public float getTemperature() {
