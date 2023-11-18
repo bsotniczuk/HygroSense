@@ -13,6 +13,7 @@ import pl.bsotniczuk.hygrosense.HygroEventListener;
 import pl.bsotniczuk.hygrosense.MainActivity;
 import pl.bsotniczuk.hygrosense.R;
 import pl.bsotniczuk.hygrosense.controller.DatabaseController;
+import pl.bsotniczuk.hygrosense.controller.StatisticsDbController;
 import pl.bsotniczuk.hygrosense.controller.ToolbarMainActivityController;
 import pl.bsotniczuk.hygrosense.model.SensorData;
 
@@ -23,8 +24,9 @@ public class MainActivityViewController implements HygroEventListener {
     TextView temperatureValueTextView;
     TextView humidityValueTextView;
     TextView connectionTextView;
+    StatisticsDbController statisticsDbController;
 
-    private static final float faultyValue = -275;
+    public static final float faultyValue = -275;
 
     public static DatabaseController databaseController;
     private boolean wasConnectionEstablished;
@@ -37,9 +39,7 @@ public class MainActivityViewController implements HygroEventListener {
 
     private static final DecimalFormat df = new DecimalFormat("0.00");
 
-    public MainActivityViewController(
-            MainActivity mainActivity
-            ) {
+    public MainActivityViewController(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
         this.temperatureValueTextView = this.mainActivity.findViewById(R.id.temperatureValueTextView);
         this.humidityValueTextView = this.mainActivity.findViewById(R.id.humidityValueTextView);
@@ -48,6 +48,7 @@ public class MainActivityViewController implements HygroEventListener {
         databaseController.initDbAndSetupAwsIotCoreConnection(this);
         this.apiFetcher = new ApiFetcher();
         this.apiFetcher.addListener(this);
+        this.statisticsDbController = new StatisticsDbController(this.mainActivity);
 
         new ToolbarMainActivityController(this.mainActivity, this.mainActivity.findViewById(R.id.toolbar));
 
@@ -91,26 +92,40 @@ public class MainActivityViewController implements HygroEventListener {
         else if (connectionTextView.getText().length() > 0) {
             mainActivity.runOnUiThread(() -> connectionTextView.setText(""));
         }
-        setStringsToDisplay(sensorData);
-        setTemperatureAndHumidityValueTextViews();
+        if (!isFaultySensorData(sensorData)) {
+            statisticsDbController.saveToStatisticsTable(sensorData);
+            setStringsToDisplay(sensorData);
+            setTemperatureAndHumidityValueTextViews();
+        }
+    }
+
+    private boolean isFaultySensorData(SensorData[] sensorData) {
+        int faultyDataCounter = 0;
+        for (SensorData sensor : sensorData) {
+            if (sensor.getHumidity() < faultyValue || sensor.getTemperature() < faultyValue) {
+                faultyDataCounter++;
+            }
+        }
+        return faultyDataCounter == sensorData.length;
     }
 
     private void setStringsToDisplay(SensorData[] sensorData) {
         humidityTextAllSensors = temperatureTextAllSensors = mainActivity.getString(R.string.all_sensors) + "\n";
-        float temperatureAvg = 0;
-        float humidityAvg = 0;
+        float temperatureSum = 0;
+        float humiditySum = 0;
         int i = 0;
+
         for (SensorData sensor : sensorData) {
-            if (sensor.getHumidity() > faultyValue || sensor.getTemperature() > faultyValue) {
+            if (sensor.getHumidity() > faultyValue && sensor.getTemperature() > faultyValue) {
                 setAllSensorDataStrings(sensor.getId(), df.format(sensor.getTemperature()), df.format(sensor.getHumidity()));
-                temperatureAvg += sensor.getTemperature();
-                humidityAvg += sensor.getHumidity();
+                temperatureSum += sensor.getTemperature();
+                humiditySum += sensor.getHumidity();
                 i++;
             } else {
                 setAllSensorDataStrings(sensor.getId(), "?", "?");
             }
         }
-        setAverageSensorDataStrings(temperatureAvg / i, humidityAvg / i);
+        setAverageSensorDataStrings(temperatureSum / i, humiditySum / i);
     }
 
     private void setAverageSensorDataStrings(float temperatureAvg, float humidityAvg) {

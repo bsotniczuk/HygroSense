@@ -12,6 +12,7 @@
 //EEPROM
 #include <EEPROM.h>
 #define eepromTextVariableSize 33 // the max size of the ssid, password etc. 32+null terminated
+#define eepromBufferSize 200
 
 #define DHTPIN 33
 #define DHTPIN1 32
@@ -53,6 +54,7 @@ float readPrimitive(float t) {
 void configPostEndpoint(AsyncWebServerRequest *request) {
   Serial.println("POST has been received!");
   int parameterCount = 0;
+  boolean wasResponseSent = false;
 
   int params = request->params();
   for (int i = 0; i < params; i++) {
@@ -68,6 +70,7 @@ void configPostEndpoint(AsyncWebServerRequest *request) {
       if (valueLength > 31 || valueLength < 3) {
         parameterCount = 0; //invalidate storing in EEPROM memory
         sendJsonResponse(200, "Value length is too small or too big", request);
+        wasResponseSent = true;
       }
     }
     if (parameter.equals("wifi_password")) {
@@ -78,6 +81,7 @@ void configPostEndpoint(AsyncWebServerRequest *request) {
       if (valueLength > 31 || valueLength < 3) {
         parameterCount = 0; //invalidate storing in EEPROM memory
         sendJsonResponse(200, "Value length is too small or too big", request);
+        wasResponseSent = true;
       }
     }
   }
@@ -91,15 +95,13 @@ void configPostEndpoint(AsyncWebServerRequest *request) {
 
     ESP.restart(); //restart after getting new wifi settings
   }
-  else {
+  else if (!wasResponseSent) {
     sendJsonResponse(200, "Request is wrong or contains too few parameters", request);
   }
 }
 
 void sendJsonResponse(int responseCode, String response, AsyncWebServerRequest *request) {
-  String json = "{";
-  json += "\"response\":\""+String(response)+"\"";
-  json += "}";
+  String json = "{\"response\":\"" + String(response) + "\"}";
   Serial.println(json);
   request->send(responseCode, "application/json", json);
   json = String();
@@ -213,8 +215,6 @@ void debugSensorData(byte i, float temperatureFloat, float humidityFloat) {
   Serial.print("Humidity: ");
   Serial.println(String(humidityFloat));
 }
-
-#define eepromBufferSize 200
 
 void saveSettingsToEEPPROM(char* ssid_, char* pass_) {
   Serial.println("\n saveSettingsToEEPPROM");

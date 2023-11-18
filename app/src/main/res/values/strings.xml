@@ -28,4 +28,11 @@
     <string name="wrong_aws_certificates">Wrong AWS certificates provided</string>
     <string name="all_sensors">All sensors</string>
     <string name="average">Average</string>
+    <string name="average_data">Average data</string>
+    <string name="records">records</string>
+    <string name="action_delete">Delete</string>
+    <string name="temperature_chart">Temperature - Time chart</string>
+    <string name="humidity_chart">Humidity - Time chart</string>
+    <string name="temperature_min_max">Temp. min/max</string>
+    <string name="humidity_min_max">Hum. min/max</string>
 </resources>
