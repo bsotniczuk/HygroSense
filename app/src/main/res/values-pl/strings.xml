@@ -21,12 +21,19 @@
 
     <string name="action_info">info</string>
     <string name="action_bluetooth">bluetooth</string>
-    <string name="access_point_mode">AP Mode Selected\nLocally connecting to the ESP32</string>
-    <string name="aws_mode_station_mode">AWS Station Mode Selected\nAWS IoT Core connection to ESP32</string>
+    <string name="access_point_mode">Tryb AP Wybrany\nŁączę lokalnie do ESP32</string>
+    <string name="aws_mode_station_mode">Tryb AWS Station Wybrany\nŁączę do ESP32 poprzez AWS IoT Core</string>
     <string name="connection_type">Wybierz typ połączenia</string>
     <string name="aws_unreachable">AWS niedostępny, sprawdź ustawienia</string>
     <string name="send_settings_to_esp32">Wyślij ustawienia do ESP32</string>
     <string name="wrong_aws_certificates">Niepoprawne certyfikaty AWS</string>
     <string name="all_sensors">Sensory</string>
     <string name="average">Średnia</string>
+    <string name="average_data">Średnia historyczna</string>
+    <string name="records">rekordów</string>
+    <string name="action_delete">Usuń</string>
+    <string name="temperature_chart">Wykres temperatury w czasie</string>
+    <string name="humidity_chart">Wykres wilgotności w czasie</string>
+    <string name="temperature_min_max">Temp. min/max</string>
+    <string name="humidity_min_max">Wilg. min/max</string>
 </resources>

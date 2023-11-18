@@ -1,18 +1,25 @@
 package pl.bsotniczuk.hygrosense.data
 
 import android.content.Context
-import androidx.room.Database
-import androidx.room.Room
-import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
+import androidx.room.*
 import pl.bsotniczuk.hygrosense.data.dao.SettingsDao
+import pl.bsotniczuk.hygrosense.data.dao.StatisticsDao
 import pl.bsotniczuk.hygrosense.data.model.SettingsItem
+import pl.bsotniczuk.hygrosense.data.model.StatisticsItem
 
-@Database(entities = [SettingsItem::class], version = 1, exportSchema = false)
+@Database(
+    entities = [SettingsItem::class, StatisticsItem::class],
+    version = 2,
+    exportSchema = true,
+    autoMigrations = [
+        AutoMigration(from = 1, to = 2)
+    ]
+)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun settingsDao() : SettingsDao
+    abstract fun statisticsDao() : StatisticsDao
 
     companion object {
         // Singleton prevents multiple instances of database opening at the same time.

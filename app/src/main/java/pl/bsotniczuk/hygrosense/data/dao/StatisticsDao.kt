@@ -9,13 +9,13 @@ import pl.bsotniczuk.hygrosense.data.model.StatisticsItem
 interface StatisticsDao {
 
     @Insert
-    fun createSettingsItem(statisticsItem: StatisticsItem)
+    fun createStatisticsItem(statisticsItem: StatisticsItem)
 
     @Update
-    suspend fun updateSettingsItem(statisticsItem: StatisticsItem)
+    suspend fun updateStatisticsItem(statisticsItem: StatisticsItem)
 
     @Delete
-    suspend fun deleteSettingsItem(statisticsItem: StatisticsItem)
+    suspend fun deleteStatisticsItem(statisticsItem: StatisticsItem)
 
     @Query("DELETE FROM ${DbConstants.STATISTICS_TABLE_NAME}")
     suspend fun deleteAll()
@@ -24,9 +24,12 @@ interface StatisticsDao {
     fun readStatisticsItem(): LiveData<StatisticsItem>
 
     @Query("SELECT * FROM ${DbConstants.STATISTICS_TABLE_NAME} ORDER BY id ASC")
-    fun readAllData(): LiveData<List<StatisticsItem>>
+    fun readAllStatistics(): LiveData<List<StatisticsItem>>
 
     @Query("SELECT * FROM ${DbConstants.STATISTICS_TABLE_NAME} ORDER BY date DESC")
-    fun readAllDataOrderByDate(): LiveData<List<StatisticsItem>>
+    fun readAllStatisticsOrderByDate(): LiveData<List<StatisticsItem>>
+
+    @Query("SELECT * FROM ${DbConstants.STATISTICS_TABLE_NAME} ORDER BY date DESC LIMIT 1000")
+    fun readAllStatisticsOrderByDateLimit1000(): LiveData<List<StatisticsItem>>
 
 }

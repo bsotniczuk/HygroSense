@@ -3,35 +3,37 @@ package pl.bsotniczuk.hygrosense.data.repository
 import androidx.lifecycle.LiveData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import pl.bsotniczuk.hygrosense.data.dao.SettingsDao
-import pl.bsotniczuk.hygrosense.data.model.SettingsItem
+import pl.bsotniczuk.hygrosense.data.dao.StatisticsDao
+import pl.bsotniczuk.hygrosense.data.model.StatisticsItem
 
-class StatisticsRepository(private val settingsDao: SettingsDao) {
+class StatisticsRepository(private val statisticsDao: StatisticsDao) {
 
-    val readSettingsItem: LiveData<SettingsItem> = settingsDao.readSettingsItem()
-    val readAllSettingsItems: LiveData<List<SettingsItem>> = settingsDao.readAllData()
+    val readStatisticsItem: LiveData<StatisticsItem> = statisticsDao.readStatisticsItem()
+    val readAllStatistics: LiveData<List<StatisticsItem>> = statisticsDao.readAllStatistics()
+    val readAllStatisticsOrderByDate: LiveData<List<StatisticsItem>> = statisticsDao.readAllStatisticsOrderByDate()
+    val readAllStatisticsOrderByDateLimit1000: LiveData<List<StatisticsItem>> = statisticsDao.readAllStatisticsOrderByDateLimit1000()
 
-    suspend fun createSettingsItem(settingsItem: SettingsItem) {
+    suspend fun createStatisticsItem(statisticsItem: StatisticsItem) {
         return withContext(Dispatchers.IO) {
-            settingsDao.createSettingsItem(settingsItem)
+            statisticsDao.createStatisticsItem(statisticsItem)
         }
     }
 
-    suspend fun updateSettingsItem(settingsItem: SettingsItem) {
+    suspend fun updateStatisticsItem(statisticsItem: StatisticsItem) {
         return withContext(Dispatchers.IO) {
-            settingsDao.updateSettingsItem(settingsItem)
+            statisticsDao.updateStatisticsItem(statisticsItem)
         }
     }
 
-    suspend fun deleteSettingsItem(settingsItem: SettingsItem) {
+    suspend fun deleteStatisticsItem(statisticsItem: StatisticsItem) {
         return withContext(Dispatchers.IO) {
-            settingsDao.deleteSettingsItem(settingsItem)
+            statisticsDao.deleteStatisticsItem(statisticsItem)
         }
     }
 
     suspend fun deleteAll() {
         return withContext(Dispatchers.IO) {
-            settingsDao.deleteAll()
+            statisticsDao.deleteAll()
         }
     }
 

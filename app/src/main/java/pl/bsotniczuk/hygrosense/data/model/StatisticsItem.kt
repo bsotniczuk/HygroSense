@@ -13,11 +13,11 @@ data class StatisticsItem(
     @PrimaryKey(autoGenerate = true)
     val id: Int,
     @ColumnInfo(name = "sensor_id")
-    val sensor_id: String,
+    val sensor_id: Int,
     @ColumnInfo(name = "temperature")
-    val temperature: String,
+    val temperature: Float,
     @ColumnInfo(name = "humidity")
-    val humidity: String,
+    val humidity: Float,
     @ColumnInfo(name = "date")
     val date: Date
 

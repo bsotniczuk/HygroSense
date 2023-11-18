@@ -1,7 +1,5 @@
 package pl.bsotniczuk.hygrosense.controller;
 
-import android.app.ActivityOptions;
-import android.content.Intent;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
