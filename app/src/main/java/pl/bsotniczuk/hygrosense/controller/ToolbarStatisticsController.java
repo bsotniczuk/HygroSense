@@ -8,16 +8,16 @@ import pl.bsotniczuk.hygrosense.StatisticsActivity;
 
 public class ToolbarStatisticsController {
 
+    private StatisticsDbController statisticsDbController;
+
     public ToolbarStatisticsController(StatisticsActivity statisticsActivity, Toolbar toolbar) {
         toolbar.inflateMenu(R.menu.menu_statistics);
         toolbar.setOnMenuItemClickListener(item -> {
             int id = item.getItemId();
             if (id == R.id.action_delete) {
-                Toast.makeText(
-                                statisticsActivity.getApplicationContext(),
-                                "Delete item clicked",
-                                Toast.LENGTH_SHORT)
-                        .show();
+                statisticsDbController = new StatisticsDbController(statisticsActivity);
+                statisticsDbController.deleteAllFromStatisticsTable();
+                Toast.makeText(statisticsActivity.getApplicationContext(), "Delete item clicked", Toast.LENGTH_SHORT).show();
             }
             return false;
         });

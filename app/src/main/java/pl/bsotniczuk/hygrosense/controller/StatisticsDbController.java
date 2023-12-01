@@ -3,6 +3,7 @@ package pl.bsotniczuk.hygrosense.controller;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -46,8 +47,12 @@ public class StatisticsDbController {
 
     public void saveToStatisticsTable(SensorData[] sensorData) {
         Date date = new Date();
+
+        boolean isAllDataCorrect =
+                Arrays.stream(sensorData).allMatch(sensor ->
+                        sensor.getTemperature() > faultyValue && sensor.getHumidity() > faultyValue);
         for (SensorData sensor : sensorData) {
-            if (sensor.getHumidity() > faultyValue && sensor.getTemperature() > faultyValue) {
+            if (isAllDataCorrect) {
                 StatisticsItem statisticsItem = new StatisticsItem(
                         0, sensor.getId(), sensor.getTemperature(), sensor.getHumidity(), date);
                 statisticsViewModel.createStatisticsItem(statisticsItem);
@@ -58,12 +63,18 @@ public class StatisticsDbController {
     private void readDataFromDatabaseNotArchivedSortByDate(StatisticsActivity statisticsActivity) {
         Log.i("HygroSense", "start read");
         final Observer<List<StatisticsItem>> statisticsObserver = statisticsItems -> {
-            Log.i("HygroSense", "inform listeners");
-            Log.i("HygroSense", "statistics item get 0: " + statisticsItems.get(0).getTemperature());
-            for (StatisticsDbEventListener hl : listeners)
-                hl.statisticsDataChanged(statisticsItems);
+            Log.i("HygroSense", "inform listeners, size: " + statisticsItems.size());
+            if (statisticsItems.size() > 0) {
+                Log.i("HygroSense", "statistics item get 0: " + statisticsItems.get(0).getTemperature());
+                for (StatisticsDbEventListener hl : listeners)
+                    hl.statisticsDataChanged(statisticsItems);
+            }
         };
         statisticsViewModel.getReadAllStatisticsOrderByDate().observe(statisticsActivity, statisticsObserver);
+    }
+
+    public void deleteAllFromStatisticsTable() {
+        statisticsViewModel.deleteAll();
     }
 
     public void saveToStatisticsTableTest() {

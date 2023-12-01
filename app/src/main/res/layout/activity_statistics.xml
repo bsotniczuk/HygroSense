@@ -73,7 +73,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="25dp"
                         android:layout_marginEnd="25dp"
-                        android:text="@string/average_data"
+                        android:text="@string/no_records"
                         android:textAlignment="center"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                         android:textSize="12sp" />
@@ -116,7 +116,7 @@
                                 android:layout_marginBottom="5dp"
                                 android:background="@drawable/roundedtextview"
                                 android:gravity="center"
-                                android:text="@string/temperature"
+                                android:text="@string/empty"
                                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                                 android:textColor="@android:color/white"
                                 android:textSize="18sp" />
@@ -153,7 +153,7 @@
                                 android:layout_marginBottom="5dp"
                                 android:background="@drawable/roundedtextview"
                                 android:gravity="center"
-                                android:text="@string/humidity"
+                                android:text="@string/empty"
                                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                                 android:textColor="@android:color/white"
                                 android:textSize="18sp" />
@@ -198,7 +198,7 @@
                                 android:layout_marginBottom="5dp"
                                 android:background="@drawable/roundedtextview"
                                 android:gravity="center"
-                                android:text="@string/temperature"
+                                android:text="@string/empty"
                                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                                 android:textColor="@android:color/white"
                                 android:textSize="18sp" />
@@ -235,7 +235,7 @@
                                 android:layout_marginBottom="5dp"
                                 android:background="@drawable/roundedtextview"
                                 android:gravity="center"
-                                android:text="@string/humidity"
+                                android:text="@string/empty"
                                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                                 android:textColor="@android:color/white"
                                 android:textSize="18sp" />

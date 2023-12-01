@@ -66,8 +66,6 @@ public class StatisticsScatterChart {
 
     private void setChartData(ScatterChart chart, ScatterData data) {
         chart.setData(data);
-        // at last we are calling
-        // invalidate method on our chart.
         chart.invalidate();
     }
 
@@ -102,7 +100,7 @@ public class StatisticsScatterChart {
 
         // below line is use to set
         // pinch zoom to our chart.
-        chart.setPinchZoom(true);
+        chart.setPinchZoom(false);
 
         // below line we are getting
         // the legend of our chart.
@@ -157,9 +155,9 @@ public class StatisticsScatterChart {
 
     @NonNull
     private ScatterDataSet getScatterDataSet(Map<Integer, ArrayList<Entry>> sensorsAndEntries, Integer sensorAndEntry) {
-        ScatterDataSet scatterDataSet = new ScatterDataSet(sensorsAndEntries.get(sensorAndEntry), "DHT22: " + sensorAndEntry);
+        ScatterDataSet scatterDataSet = new ScatterDataSet(sensorsAndEntries.get(sensorAndEntry), "DHT22 id: " + sensorAndEntry);
         scatterDataSet.setScatterShape(ScatterChart.ScatterShape.CIRCLE);
-        scatterDataSet.setScatterShapeSize(8f);
+        scatterDataSet.setScatterShapeSize(12f);
         if (sensorAndEntry < ColorTemplate.COLORFUL_COLORS.length) {
             scatterDataSet.setColor(ColorTemplate.COLORFUL_COLORS[sensorAndEntry]);
         }
