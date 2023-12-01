@@ -31,9 +31,11 @@
     <string name="average">Średnia</string>
     <string name="average_data">Średnia historyczna</string>
     <string name="records">rekordów</string>
+    <string name="no_records">(0 rekordów)</string>
     <string name="action_delete">Usuń</string>
     <string name="temperature_chart">Wykres temperatury w czasie</string>
     <string name="humidity_chart">Wykres wilgotności w czasie</string>
     <string name="temperature_min_max">Temp. min/max</string>
     <string name="humidity_min_max">Wilg. min/max</string>
+    <string name="empty">-</string>
 </resources>

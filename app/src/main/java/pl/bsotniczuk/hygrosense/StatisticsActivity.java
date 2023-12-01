@@ -28,7 +28,7 @@ public class StatisticsActivity extends AppCompatActivity implements StatisticsD
     private ScatterChart chartHumidity;
     private StatisticsScatterChart statisticsScatterChart;
 
-    private static final DecimalFormat df = new DecimalFormat("0.00000");
+    private static final DecimalFormat df = new DecimalFormat("0.0");
 
     private boolean wasChartDrawn;
 
@@ -80,8 +80,8 @@ public class StatisticsActivity extends AppCompatActivity implements StatisticsD
             temperatureAverageTextView.setText(df.format(temperatureSum / statisticsItems.size()) + " \u2103");
             humidityAverageTextView.setText(df.format(humiditySum / statisticsItems.size()) + " %");
             recordCountTextView.setText("(" + statisticsItems.size() + " " + getString(R.string.records) + ")");
-            temperatureMaxTextView.setText(df.format(temperatureMin) + " \u2103" + " /\n" + df.format(temperatureMax) + " \u2103");
-            humidityMaxTextView.setText(df.format(humidityMin) + " %" + " /\n" + df.format(humidityMax) + " %");
+            temperatureMaxTextView.setText(df.format(temperatureMin) + " \u2103" + " / " + df.format(temperatureMax) + " \u2103");
+            humidityMaxTextView.setText(df.format(humidityMin) + " %" + " / " + df.format(humidityMax) + " %");
         });
 
         if (!wasChartDrawn) {
