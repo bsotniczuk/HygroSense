@@ -38,4 +38,7 @@
     <string name="temperature_min_max">Temp. min/max</string>
     <string name="humidity_min_max">Wilg. min/max</string>
     <string name="empty">-</string>
+    <string name="deleted_all_statistics">Usunięto wszystkie statystyki</string>
+
+    <string name="action_calibrate">Kalibracja</string>
 </resources>

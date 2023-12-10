@@ -17,7 +17,7 @@ public class ToolbarStatisticsController {
             if (id == R.id.action_delete) {
                 statisticsDbController = new StatisticsDbController(statisticsActivity);
                 statisticsDbController.deleteAllFromStatisticsTable();
-                Toast.makeText(statisticsActivity.getApplicationContext(), "Delete item clicked", Toast.LENGTH_SHORT).show();
+                Toast.makeText(statisticsActivity.getApplicationContext(), R.string.deleted_all_statistics, Toast.LENGTH_SHORT).show();
             }
             return false;
         });

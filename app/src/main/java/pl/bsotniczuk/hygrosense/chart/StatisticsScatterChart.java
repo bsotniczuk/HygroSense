@@ -13,19 +13,20 @@ import com.github.mikephil.charting.interfaces.datasets.IScatterDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import androidx.annotation.NonNull;
+import pl.bsotniczuk.hygrosense.StaticUtil;
 import pl.bsotniczuk.hygrosense.data.model.StatisticsItem;
 
 public class StatisticsScatterChart {
 
     public void drawCharts(List<StatisticsItem> statisticsItems, ScatterChart chartTemperature, ScatterChart chartHumidity) {
-        chartTemperature = setChartSettings(chartTemperature, true);
-        chartHumidity = setChartSettings(chartHumidity, false);
+        chartTemperature = setChartSettings(chartTemperature, true, statisticsItems);
+        chartHumidity = setChartSettings(chartHumidity, false, statisticsItems);
 
         Map<Integer, ArrayList<Entry>> sensorsAndEntries = new HashMap<>();
         Map<Integer, ArrayList<Entry>> sensorsAndEntriesHumidity = new HashMap<>();
@@ -38,13 +39,21 @@ public class StatisticsScatterChart {
             }
         }
 
-        for (StatisticsItem statisticsItem : statisticsItems) {
+        Date tempDate = null;
+        float id = 0f;
+        for (Integer i = 0; i < statisticsItems.size(); i++) {
+            StatisticsItem statisticsItem = statisticsItems.get(i);
+            if (tempDate == null || !tempDate.equals(statisticsItem.getDate())) {
+                tempDate = statisticsItem.getDate();
+                id = i.floatValue();
+            }
+
             for (Integer sensorAndEntry : sensorsAndEntries.keySet()) {
                 if (sensorAndEntry == statisticsItem.getSensor_id()) {
                     sensorsAndEntries.get(sensorAndEntry).add(
-                            new Entry(statisticsItem.getDate().getTime(), statisticsItem.getTemperature()));
+                            new Entry(id, statisticsItem.getTemperature()));
                     sensorsAndEntriesHumidity.get(sensorAndEntry).add(
-                            new Entry(statisticsItem.getDate().getTime(), statisticsItem.getHumidity()));
+                            new Entry(id, statisticsItem.getHumidity()));
                 }
             }
         }
@@ -69,7 +78,7 @@ public class StatisticsScatterChart {
         chart.invalidate();
     }
 
-    private ScatterChart setChartSettings(ScatterChart chart, boolean isTemperature) {
+    private ScatterChart setChartSettings(ScatterChart chart, boolean isTemperature, List<StatisticsItem> statisticsItems) {
         // below line is use to disable the description
         // of our scatter chart.
         chart.getDescription().setEnabled(false);
@@ -124,8 +133,7 @@ public class StatisticsScatterChart {
         if (isTemperature) {
             TemperatureYAxisValueFormatter temperatureYAxisValueFormatter = new TemperatureYAxisValueFormatter();
             yl.setValueFormatter(temperatureYAxisValueFormatter);
-        }
-        else {
+        } else {
             HumidityYAxisValueFormatter humidityYAxisValueFormatter = new HumidityYAxisValueFormatter();
             yl.setValueFormatter(humidityYAxisValueFormatter);
         }
@@ -139,8 +147,7 @@ public class StatisticsScatterChart {
         // below line is use to enable
         // drawing of grid lines.
         xl.setDrawGridLines(false);
-
-        DateXAxisValueFormatter dateXAxisValueFormatter = new DateXAxisValueFormatter();
+        DateXAxisValueFormatter dateXAxisValueFormatter = new DateXAxisValueFormatter(statisticsItems);
         xl.setValueFormatter(dateXAxisValueFormatter);
 
         XAxis.XAxisPosition position = XAxis.XAxisPosition.BOTTOM;
@@ -155,13 +162,18 @@ public class StatisticsScatterChart {
 
     @NonNull
     private ScatterDataSet getScatterDataSet(Map<Integer, ArrayList<Entry>> sensorsAndEntries, Integer sensorAndEntry) {
-        ScatterDataSet scatterDataSet = new ScatterDataSet(sensorsAndEntries.get(sensorAndEntry), "DHT22 id: " + sensorAndEntry);
+        String label;
+        if (sensorAndEntry == StaticUtil.Constants.referenceSensorId)  //referenceSensorId
+            label = "UT333BT";
+        else
+            label = "DHT22 id: " + sensorAndEntry;
+
+        ScatterDataSet scatterDataSet = new ScatterDataSet(sensorsAndEntries.get(sensorAndEntry), label);
         scatterDataSet.setScatterShape(ScatterChart.ScatterShape.CIRCLE);
         scatterDataSet.setScatterShapeSize(12f);
         if (sensorAndEntry < ColorTemplate.COLORFUL_COLORS.length) {
             scatterDataSet.setColor(ColorTemplate.COLORFUL_COLORS[sensorAndEntry]);
-        }
-        else {
+        } else {
             scatterDataSet.setColor(ColorTemplate.PASTEL_COLORS[0]);
         }
         return scatterDataSet;

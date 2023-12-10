@@ -10,8 +10,8 @@ import java.util.List;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.room.Room;
-import pl.bsotniczuk.hygrosense.HygroEventListener;
 import pl.bsotniczuk.hygrosense.MainActivity;
+import pl.bsotniczuk.hygrosense.StaticUtil;
 import pl.bsotniczuk.hygrosense.StatisticsActivity;
 import pl.bsotniczuk.hygrosense.StatisticsDbEventListener;
 import pl.bsotniczuk.hygrosense.data.AppDatabase;
@@ -20,7 +20,6 @@ import pl.bsotniczuk.hygrosense.data.model.StatisticsItem;
 import pl.bsotniczuk.hygrosense.data.viewmodel.StatisticsViewModel;
 import pl.bsotniczuk.hygrosense.model.SensorData;
 
-import static pl.bsotniczuk.hygrosense.viewcontroller.MainActivityViewController.faultyValue;
 
 public class StatisticsDbController {
 
@@ -48,16 +47,24 @@ public class StatisticsDbController {
     public void saveToStatisticsTable(SensorData[] sensorData) {
         Date date = new Date();
 
-        boolean isAllDataCorrect =
-                Arrays.stream(sensorData).allMatch(sensor ->
-                        sensor.getTemperature() > faultyValue && sensor.getHumidity() > faultyValue);
-        for (SensorData sensor : sensorData) {
-            if (isAllDataCorrect) {
+        if (isAllDataCorrect(sensorData)) {
+            for (SensorData sensor : sensorData) {
                 StatisticsItem statisticsItem = new StatisticsItem(
                         0, sensor.getId(), sensor.getTemperature(), sensor.getHumidity(), date);
                 statisticsViewModel.createStatisticsItem(statisticsItem);
             }
         }
+    }
+
+    private boolean isAllDataCorrect(SensorData[] sensorData) {
+        return Arrays.stream(sensorData).allMatch(sensor -> isDataCorrect(sensor));
+    }
+
+    private boolean isDataCorrect(SensorData sensor) {
+        return sensor.getTemperature() > StaticUtil.Constants.faultyValueTemperatureMin
+                && sensor.getTemperature() < StaticUtil.Constants.faultyValueTemperatureMax
+                && sensor.getHumidity() >= StaticUtil.Constants.faultyValueHumidityMin
+                && sensor.getHumidity() <= StaticUtil.Constants.faultyValueHumidityMax;
     }
 
     private void readDataFromDatabaseNotArchivedSortByDate(StatisticsActivity statisticsActivity) {

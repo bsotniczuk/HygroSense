@@ -37,4 +37,7 @@
     <string name="temperature_min_max">Temp. min/max</string>
     <string name="humidity_min_max">Hum. min/max</string>
     <string name="empty">-</string>
+    <string name="deleted_all_statistics">Deleted all statistics</string>
+
+    <string name="action_calibrate">Calibrate</string>
 </resources>

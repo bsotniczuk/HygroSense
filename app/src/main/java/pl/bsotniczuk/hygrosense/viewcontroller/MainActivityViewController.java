@@ -2,16 +2,23 @@ package pl.bsotniczuk.hygrosense.viewcontroller;
 
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.TransitionDrawable;
+import android.net.Uri;
 import android.util.Log;
 import android.widget.TextView;
 
 import java.text.DecimalFormat;
+import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicInteger;
 
+import androidx.annotation.NonNull;
 import pl.bsotniczuk.hygrosense.ApiFetcher;
 import pl.bsotniczuk.hygrosense.ConnectionType;
 import pl.bsotniczuk.hygrosense.HygroEventListener;
 import pl.bsotniczuk.hygrosense.MainActivity;
+import pl.bsotniczuk.hygrosense.PhotoTaker;
 import pl.bsotniczuk.hygrosense.R;
+import pl.bsotniczuk.hygrosense.StaticUtil;
+import pl.bsotniczuk.hygrosense.controller.CameraTextRecognition;
 import pl.bsotniczuk.hygrosense.controller.DatabaseController;
 import pl.bsotniczuk.hygrosense.controller.StatisticsDbController;
 import pl.bsotniczuk.hygrosense.controller.ToolbarMainActivityController;
@@ -19,14 +26,12 @@ import pl.bsotniczuk.hygrosense.model.SensorData;
 
 public class MainActivityViewController implements HygroEventListener {
 
-    MainActivity mainActivity;
-    ApiFetcher apiFetcher;
-    TextView temperatureValueTextView;
-    TextView humidityValueTextView;
-    TextView connectionTextView;
-    StatisticsDbController statisticsDbController;
-
-    public static final float faultyValue = -275;
+    private MainActivity mainActivity;
+    private ApiFetcher apiFetcher;
+    private TextView temperatureValueTextView;
+    private TextView humidityValueTextView;
+    private TextView connectionTextView;
+    private StatisticsDbController statisticsDbController;
 
     public static DatabaseController databaseController;
     private boolean wasConnectionEstablished;
@@ -37,6 +42,12 @@ public class MainActivityViewController implements HygroEventListener {
     private String temperatureTextAllSensors;
     private String humidityTextAllSensors;
 
+    private CameraTextRecognition cameraTextRecognition;
+
+    private int apiFetcherFrequency; //cannot be lower than 2s -> 2000ms
+    private int apiFetcherFrequencyStandard = 3000; //cannot be lower than 2s -> 2000ms
+    private int apiFetcherFrequencyCalibration = 10000; //cannot be lower than 2s -> 2000ms
+
     private static final DecimalFormat df = new DecimalFormat("0.00");
 
     public MainActivityViewController(MainActivity mainActivity) {
@@ -46,16 +57,17 @@ public class MainActivityViewController implements HygroEventListener {
         this.connectionTextView = this.mainActivity.findViewById(R.id.connectionTextView);
         databaseController = new DatabaseController(this.mainActivity);
         databaseController.initDbAndSetupAwsIotCoreConnection(this);
+        apiFetcherFrequency = apiFetcherFrequencyStandard;
         this.apiFetcher = new ApiFetcher();
         this.apiFetcher.addListener(this);
         this.statisticsDbController = new StatisticsDbController(this.mainActivity);
 
-        new ToolbarMainActivityController(this.mainActivity, this.mainActivity.findViewById(R.id.toolbar));
+        new ToolbarMainActivityController(this.mainActivity, this.mainActivity.findViewById(R.id.toolbar), this);
 
         temperatureValueTextView.setOnClickListener(v -> temperatureOrHumidityValueTextViewClick());
         humidityValueTextView.setOnClickListener(v -> temperatureOrHumidityValueTextViewClick());
 
-        refreshTextViewThread();
+        fetchSensorDataThread();
     }
 
     private void temperatureOrHumidityValueTextViewClick() {
@@ -85,11 +97,30 @@ public class MainActivityViewController implements HygroEventListener {
         displaySensorDataMultipleSensors(sensorData);
     }
 
+    @Override
+    public void hygroDataChangedAutoCalibrationSensors(SensorData[] sensorData) {
+        Log.i("HygroSense", "AutoCalibrationSensors data changed");
+//        if (!isFaultySensorData(sensorData)) {
+            StaticUtil.wasSensorDataFetched = true;
+            StaticUtil.sensorData = sensorData;
+//        }
+//        displaySensorDataMultipleSensors(sensorData);
+    }
+
+    public void hygroDataChangedAutoCalibrationReferenceSensor(SensorData sensorData) {
+        Log.i("HygroSense", "ReferenceSensor data changed");
+//        if (!isFaultyReferenceSensorData(sensorData)) {
+//            Log.i("HygroSense", "data not faulty, id: " + sensorData.getId() + " | temp: " + sensorData.getTemperature() + " | humidity: " + sensorData.getHumidity());
+            StaticUtil.wasReferenceSensorDataFetched = true;
+            StaticUtil.referenceSensorData = sensorData;
+//        }
+//        displaySensorDataMultipleSensors(sensorData);
+    }
+
     private void displaySensorDataMultipleSensors(SensorData[] sensorData) {
         if (!this.wasConnectionEstablished) {
             connectionEstablished();
-        }
-        else if (connectionTextView.getText().length() > 0) {
+        } else if (connectionTextView.getText().length() > 0) {
             mainActivity.runOnUiThread(() -> connectionTextView.setText(""));
         }
         if (!isFaultySensorData(sensorData)) {
@@ -100,13 +131,14 @@ public class MainActivityViewController implements HygroEventListener {
     }
 
     private boolean isFaultySensorData(SensorData[] sensorData) {
-        int faultyDataCounter = 0;
-        for (SensorData sensor : sensorData) {
-            if (sensor.getHumidity() < faultyValue || sensor.getTemperature() < faultyValue) {
-                faultyDataCounter++;
-            }
-        }
-        return faultyDataCounter == sensorData.length;
+        return Arrays.stream(sensorData).allMatch(sensor -> isFaultySensorData(sensor));
+    }
+
+    private boolean isFaultySensorData(SensorData sensor) {
+        return sensor.getHumidity() < StaticUtil.Constants.faultyValueHumidityMin
+                || sensor.getHumidity() > StaticUtil.Constants.faultyValueHumidityMax
+                || sensor.getTemperature() < StaticUtil.Constants.faultyValueTemperatureMin
+                || sensor.getTemperature() > StaticUtil.Constants.faultyValueTemperatureMax;
     }
 
     private void setStringsToDisplay(SensorData[] sensorData) {
@@ -116,7 +148,8 @@ public class MainActivityViewController implements HygroEventListener {
         int i = 0;
 
         for (SensorData sensor : sensorData) {
-            if (sensor.getHumidity() > faultyValue && sensor.getTemperature() > faultyValue) {
+            if (sensor.getHumidity() >= StaticUtil.Constants.faultyValueHumidityMin
+                    && sensor.getTemperature() > StaticUtil.Constants.faultyValueTemperatureMin) {
                 setAllSensorDataStrings(sensor.getId(), df.format(sensor.getTemperature()), df.format(sensor.getHumidity()));
                 temperatureSum += sensor.getTemperature();
                 humiditySum += sensor.getHumidity();
@@ -138,28 +171,108 @@ public class MainActivityViewController implements HygroEventListener {
         humidityTextAllSensors += id + " : " + humidity + " %\n";
     }
 
-    public void refreshTextViewThread() {
+    public void fetchSensorDataThread() {
         Thread t = new Thread() {
             @Override
             public void run() {
-            while (!isInterrupted()) {
-                try {
-                    Thread.sleep(3000);  //1000ms = 1 sec
-                    mainActivity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (DatabaseController.settingsItem.getConnection_type() == ConnectionType.ACCESS_POINT) {
-                                apiFetcher.fetchApiDataInfo(DatabaseController.settingsItem.getEsp32_ip_address_access_point());
+                while (!isInterrupted()) {
+                    try {
+                        Thread.sleep(apiFetcherFrequency);  //1000ms = 1 sec
+                        mainActivity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Log.i("HygroSense", "fetchSensorDataThread started");
+                                if (DatabaseController.settingsItem.getConnection_type() == ConnectionType.ACCESS_POINT) {
+                                    if (StaticUtil.isCalibrationInProgress && !StaticUtil.isSynchronizeSensorsThreadStarted) {
+                                        apiFetcherFrequency = apiFetcherFrequencyCalibration;
+                                        new PhotoTaker(mainActivity); //TODO: change the api fetcher to also save data from photos to db
+                                        apiFetcher.fetchApiDataInfoAutoCalibration(DatabaseController.settingsItem.getEsp32_ip_address_access_point());
+                                        synchronizeSensorsDataThread();
+                                    } else if (!StaticUtil.isSynchronizeSensorsThreadStarted) {
+                                        apiFetcherFrequency = apiFetcherFrequencyStandard;
+                                        apiFetcher.fetchApiDataInfo(DatabaseController.settingsItem.getEsp32_ip_address_access_point());
+                                    }
+                                } else {
+                                    interrupt();
+                                }
                             }
-                            else {
-                                interrupt();
-                            }
-                        }
-                    });
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                        });
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
+        };
+        t.start();
+    }
+
+    private AtomicInteger tries = new AtomicInteger();
+
+    public void synchronizeSensorsDataThread() {
+        Log.i("HygroSense", "synchronizeSensorsDataThread started");
+        StaticUtil.isSynchronizeSensorsThreadStarted = true;
+        Thread t = new Thread() {
+            @Override
+            public void run() {
+                while (StaticUtil.isSynchronizeSensorsThreadStarted) {
+                    try {
+                        Thread.sleep(400);  //1000ms = 1 sec
+                        mainActivity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Log.i("HygroSense", "synchronizeSensorsDataThread run: " + tries.get());
+
+                                tries.getAndIncrement();
+                                if ((StaticUtil.wasSensorDataFetched && StaticUtil.wasReferenceSensorDataFetched)
+                                        || tries.get() >= 8) {
+                                    if (tries.get() >= 8) Log.i("HygroSense", "synchronizeSensorsDataThread failed to sync");
+                                    else Log.i("HygroSense", "synchronizeSensorsDataThread data synchronized");
+                                    StaticUtil.wasSensorDataFetched = StaticUtil.wasReferenceSensorDataFetched = false;
+                                    StaticUtil.isSynchronizeSensorsThreadStarted = false;
+                                    tries.set(0);
+
+                                    for (SensorData sensor : StaticUtil.sensorData) {
+                                        Log.i("HygroSense", "synchronizeSensorsDataThread id: "
+                                                + sensor.getId()
+                                                + " | temperature: " + sensor.getTemperature()
+                                                + " | humidity: " + sensor.getHumidity());
+                                    }
+
+                                    if (StaticUtil.referenceSensorData != null)
+                                        Log.i("HygroSense", "synchronizeSensorsDataThread id: "
+                                            + StaticUtil.referenceSensorData.getId()
+                                            + " | temperature: " + StaticUtil.referenceSensorData.getTemperature()
+                                            + " | humidity: " + StaticUtil.referenceSensorData.getHumidity());
+
+                                    SensorData[] sensorData;
+                                    if (StaticUtil.sensorData != null && StaticUtil.sensorData.length > 0 && StaticUtil.referenceSensorData != null) {
+                                        int sizeOfArray = StaticUtil.sensorData.length + 1;
+                                        sensorData = new SensorData[sizeOfArray];
+                                        sensorData[sizeOfArray - 1] = StaticUtil.referenceSensorData;
+                                        for (int i = 0; i < sizeOfArray - 1; i++) {
+                                            sensorData[i] = StaticUtil.sensorData[i];
+                                        }
+                                        Log.i("HygroSense", "synchronizeSensorsDataThread length StaticUtil.sensorData: "
+                                                + StaticUtil.sensorData.length);
+
+                                        for (SensorData sensor : sensorData) {
+                                            Log.i("HygroSense", "extra synchronizeSensorsDataThread id: "
+                                                    + sensor.getId()
+                                                    + " | temperature: " + sensor.getTemperature()
+                                                    + " | humidity: " + sensor.getHumidity());
+                                        }
+                                        Log.i("HygroSense", "synchronizeSensorsDataThread length sensorData: "
+                                                + sensorData.length);
+                                        hygroDataChanged(sensorData);
+                                    }
+                                    interrupt();
+                                }
+                            }
+                        });
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         };
         t.start();
@@ -176,5 +289,22 @@ public class MainActivityViewController implements HygroEventListener {
         connectionTextView.setText("");
 
         this.wasConnectionEstablished = true;
+    }
+
+    public void openCameraTextRecognitionMenu() {
+        cameraTextRecognition = new CameraTextRecognition(mainActivity);
+        cameraTextRecognition.showInputImageDialog();
+    }
+
+    public void processImage() {
+        cameraTextRecognition.processImage();
+    }
+
+    public void processImage(Uri imageUri) {
+        cameraTextRecognition.processImage(imageUri);
+    }
+
+    public void permissionRelated(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        cameraTextRecognition.permissionRelated(requestCode, permissions, grantResults);
     }
 }
