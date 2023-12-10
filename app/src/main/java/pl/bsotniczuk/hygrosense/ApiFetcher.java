@@ -22,6 +22,14 @@ public class ApiFetcher {
     }
 
     public void fetchApiDataInfo(String ipAddress) {
+        fetchApiDataInfo(ipAddress, false);
+    }
+
+    public void fetchApiDataInfoAutoCalibration(String ipAddress) {
+        fetchApiDataInfo(ipAddress, true);
+    }
+
+    private void fetchApiDataInfo(String ipAddress, boolean isAutoCalibration) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(ipAddress)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -41,8 +49,14 @@ public class ApiFetcher {
                         Log.i("HygroSense", "Data fetched, id: " + sensor.getId() + " temp: " + sensor.getTemperature() +
                                 " | humidity: " + sensor.getHumidity() + " | deviceName: " + sensor.getDeviceName());
                     }
-                    for (HygroEventListener hl : listeners)
-                        hl.hygroDataChanged(sensorData);
+                    if (!isAutoCalibration) {
+                        for (HygroEventListener hl : listeners)
+                            hl.hygroDataChanged(sensorData);
+                    }
+                    else {
+                        for (HygroEventListener hl : listeners)
+                            hl.hygroDataChangedAutoCalibrationSensors(sensorData);
+                    }
                 }
             }
 

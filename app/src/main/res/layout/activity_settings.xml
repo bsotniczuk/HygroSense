@@ -48,19 +48,19 @@
                     android:id="@+id/awsEndpointAddressText"
                     style="@style/TextView"
                     android:layout_width="match_parent"
-                    android:layout_height="30dp"
+                    android:layout_height="26dp"
                     android:layout_marginStart="25dp"
-                    android:layout_marginEnd="25dp"
                     android:layout_marginTop="10dp"
+                    android:layout_marginEnd="25dp"
                     android:layout_marginBottom="5dp"
                     android:text="@string/aws_endpoint_address"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                    android:textSize="18sp" />
+                    android:textSize="17sp" />
 
                 <EditText
                     android:id="@+id/awsEndpointAddressEditText"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="48dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginBottom="10dp"
@@ -80,19 +80,19 @@
                     android:id="@+id/wifiAccessPointSsidText"
                     style="@style/TextView"
                     android:layout_width="match_parent"
-                    android:layout_height="30dp"
+                    android:layout_height="26dp"
                     android:layout_marginStart="25dp"
+                    android:layout_marginTop="0dp"
                     android:layout_marginEnd="25dp"
-                    android:layout_marginTop="10dp"
                     android:layout_marginBottom="5dp"
                     android:text="@string/wifi_ssid_access_point_name"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                    android:textSize="18sp" />
+                    android:textSize="17sp" />
 
                 <EditText
                     android:id="@+id/wifiAccessPointSsidEditText"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="48dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginBottom="10dp"
@@ -112,19 +112,19 @@
                     android:id="@+id/wifiPasswordAccessPointText"
                     style="@style/TextView"
                     android:layout_width="match_parent"
-                    android:layout_height="30dp"
+                    android:layout_height="26dp"
                     android:layout_marginStart="25dp"
+                    android:layout_marginTop="0dp"
                     android:layout_marginEnd="25dp"
-                    android:layout_marginTop="10dp"
                     android:layout_marginBottom="5dp"
                     android:text="@string/wifi_password_access_point"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                    android:textSize="18sp" />
+                    android:textSize="17sp" />
 
                 <EditText
                     android:id="@+id/wifiPasswordAccessPointEditText"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="48dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginBottom="10dp"
@@ -144,22 +144,22 @@
                     android:id="@+id/toggleApMode"
                     style="@style/TextView"
                     android:layout_width="match_parent"
-                    android:layout_height="30dp"
+                    android:layout_height="26dp"
                     android:layout_marginStart="25dp"
+                    android:layout_marginTop="0dp"
                     android:layout_marginEnd="25dp"
-                    android:layout_marginTop="10dp"
                     android:layout_marginBottom="5dp"
                     android:text="@string/connection_type"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                    android:textSize="18sp" />
+                    android:textSize="17sp" />
 
                 <LinearLayout
                     android:id="@+id/LinearLayout02"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="48dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginBottom="5dp"
                     android:orientation="horizontal">
 
                     <androidx.appcompat.widget.SwitchCompat
@@ -172,7 +172,7 @@
                         android:switchMinWidth="60dp"
                         android:text="AWS Mode"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                        android:textSize="18sp" />
+                        android:textSize="17sp" />
 
                     <TextView
                         android:id="@+id/textRegular"
@@ -187,7 +187,7 @@
                         android:text="AP Mode"
                         android:textAlignment="center"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                        android:textSize="18sp" />
+                        android:textSize="17sp" />
                 </LinearLayout>
 
                 <TextView
@@ -196,17 +196,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="25dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="0dp"
                     android:layout_marginEnd="25dp"
                     android:layout_marginBottom="5dp"
                     android:text="@string/ip_address_of_the_esp32_access_point"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                    android:textSize="18sp" />
+                    android:textSize="17sp" />
 
                 <EditText
                     android:id="@+id/ipAddressEditText"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="48dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginBottom="10dp"
@@ -226,19 +226,19 @@
                     android:id="@+id/wifiSsidText"
                     style="@style/TextView"
                     android:layout_width="match_parent"
-                    android:layout_height="30dp"
+                    android:layout_height="26dp"
                     android:layout_marginStart="25dp"
+                    android:layout_marginTop="0dp"
                     android:layout_marginEnd="25dp"
-                    android:layout_marginTop="10dp"
                     android:layout_marginBottom="5dp"
                     android:text="@string/wifi_ssid_name"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                    android:textSize="18sp" />
+                    android:textSize="17sp" />
 
                 <EditText
                     android:id="@+id/wifiSsidEditText"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="48dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginBottom="10dp"
@@ -258,19 +258,19 @@
                     android:id="@+id/wifiPasswordText"
                     style="@style/TextView"
                     android:layout_width="match_parent"
-                    android:layout_height="30dp"
+                    android:layout_height="26dp"
                     android:layout_marginStart="25dp"
+                    android:layout_marginTop="0dp"
                     android:layout_marginEnd="25dp"
-                    android:layout_marginTop="10dp"
                     android:layout_marginBottom="5dp"
                     android:text="@string/wifi_password"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                    android:textSize="18sp" />
+                    android:textSize="17sp" />
 
                 <EditText
                     android:id="@+id/wifiPasswordEditText"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="48dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginBottom="10dp"
@@ -297,6 +297,7 @@
                     android:enabled="false"
                     android:focusable="true"
                     android:textAllCaps="false"
+                    style="@style/TextView"
                     android:background="@drawable/rounded_rectangle"
                     android:text="@string/send_settings_to_esp32" />
 

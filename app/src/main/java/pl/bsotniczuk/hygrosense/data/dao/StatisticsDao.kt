@@ -26,7 +26,7 @@ interface StatisticsDao {
     @Query("SELECT * FROM ${DbConstants.STATISTICS_TABLE_NAME} ORDER BY id ASC")
     fun readAllStatistics(): LiveData<List<StatisticsItem>>
 
-    @Query("SELECT * FROM ${DbConstants.STATISTICS_TABLE_NAME} ORDER BY date DESC")
+    @Query("SELECT * FROM ${DbConstants.STATISTICS_TABLE_NAME} ORDER BY date ASC")
     fun readAllStatisticsOrderByDate(): LiveData<List<StatisticsItem>>
 
     @Query("SELECT * FROM ${DbConstants.STATISTICS_TABLE_NAME} ORDER BY date DESC LIMIT 1000")

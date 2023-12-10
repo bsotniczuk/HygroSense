@@ -32,123 +32,172 @@
         android:layout_marginTop="?attr/actionBarSize"
         tools:context=".MainActivity">
 
-        <LinearLayout
-            android:id="@+id/deviceInfoLinearLayout"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="0dp">
 
-            <TextView
-                android:id="@+id/remoteNameTextView"
-                style="@style/TextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="8dp"
-                android:text="@string/remote_name"
-                android:textAlignment="center"
-                android:textSize="24sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/temperatureLinearLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/deviceInfoLinearLayout"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/temperatureImageView"
-                android:layout_width="130dp"
-                android:layout_height="160dp"
-                android:src="@drawable/thermometer_svg" />
-
-            <TextView
-                android:id="@+id/temperatureValueTextView"
-                style="@style/TextView"
+            <RelativeLayout
+                android:id="@+id/relativeLayoutWrapper"
+                style="@style/AppBackground"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="0dp"
-                android:layout_marginBottom="0dp"
-                android:gravity="center"
-                android:text="@string/temperature"
-                android:textAlignment="center"
-                android:onClick="temperatureValueTextViewClick"
-                android:textSize="24sp" />
-        </LinearLayout>
+                tools:context=".MainActivity">
 
-        <LinearLayout
-            android:id="@+id/linearLayout3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/temperatureLinearLayout"
-            android:orientation="horizontal">
+                <LinearLayout
+                    android:id="@+id/deviceInfoLinearLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/humidityImageView"
-                android:layout_width="130dp"
-                android:layout_height="160dp"
-                android:src="@drawable/humidity_svg" />
+                    <TextView
+                        android:id="@+id/remoteNameTextView"
+                        style="@style/TextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="8dp"
+                        android:text="@string/remote_name"
+                        android:textAlignment="center"
+                        android:textSize="24sp" />
+                </LinearLayout>
 
-            <TextView
-                android:id="@+id/humidityValueTextView"
-                style="@style/TextView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="0dp"
-                android:layout_marginBottom="0dp"
-                android:gravity="center"
-                android:text="@string/humidity"
-                android:textAlignment="center"
-                android:textSize="24sp" />
-        </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/temperatureLinearLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/deviceInfoLinearLayout"
+                    android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/addToSettingsDb"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/linearLayout3"
-            android:layout_alignParentEnd="true"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:onClick="addToSettingsDb"
-            android:visibility="gone"
-            android:text="addToSettingsDb" />
+                    <ImageView
+                        android:id="@+id/temperatureImageView"
+                        android:layout_width="130dp"
+                        android:layout_height="160dp"
+                        android:src="@drawable/thermometer_svg" />
 
-        <Button
-            android:id="@+id/deleteDb"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/addToSettingsDb"
-            android:layout_alignParentEnd="true"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:onClick="deleteDb"
-            android:visibility="gone"
-            android:text="deleteDb" />
+                    <TextView
+                        android:id="@+id/temperatureValueTextView"
+                        style="@style/TextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="0dp"
+                        android:layout_marginBottom="0dp"
+                        android:gravity="center"
+                        android:onClick="temperatureValueTextViewClick"
+                        android:text="@string/temperature"
+                        android:textAlignment="center"
+                        android:textSize="24sp" />
+                </LinearLayout>
 
-        <Button
-            android:id="@+id/readSettingsItem"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/deleteDb"
-            android:layout_alignParentEnd="true"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:onClick="readSettingsItem"
-            android:visibility="gone"
-            android:text="readSettingsItem" />
+                <LinearLayout
+                    android:id="@+id/linearLayout3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/temperatureLinearLayout"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/humidityImageView"
+                        android:layout_width="130dp"
+                        android:layout_height="160dp"
+                        android:src="@drawable/humidity_svg" />
+
+                    <TextView
+                        android:id="@+id/humidityValueTextView"
+                        style="@style/TextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="0dp"
+                        android:layout_marginBottom="0dp"
+                        android:gravity="center"
+                        android:text="@string/humidity"
+                        android:textAlignment="center"
+                        android:textSize="24sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linearLayout4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/linearLayout3"
+                    android:orientation="horizontal"
+                    android:paddingTop="5dp">
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/imageIv"
+                        style="@style/TextView"
+                        android:layout_width="250dp"
+                        android:layout_height="220dp"
+                        android:layout_marginTop="0dp"
+                        android:layout_marginBottom="0dp"
+                        android:adjustViewBounds="true"
+                        android:gravity="center"
+                        android:text="@string/humidity"
+                        android:textAlignment="center"
+                        android:textSize="24sp"
+                        app:strokeWidth="0dp" />
+
+                    <TextView
+                        android:id="@+id/textViewMlKit"
+                        style="@style/TextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="0dp"
+                        android:layout_marginBottom="0dp"
+                        android:gravity="center"
+                        android:text=""
+                        android:textAlignment="center"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/addToSettingsDb"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/linearLayout3"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:onClick="addToSettingsDb"
+                    android:text="addToSettingsDb"
+                    android:visibility="gone" />
+
+                <Button
+                    android:id="@+id/deleteDb"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/addToSettingsDb"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:onClick="deleteDb"
+                    android:text="deleteDb"
+                    android:visibility="gone" />
+
+                <Button
+                    android:id="@+id/readSettingsItem"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/deleteDb"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:onClick="readSettingsItem"
+                    android:text="readSettingsItem"
+                    android:visibility="gone" />
+            </RelativeLayout>
+        </ScrollView>
 
         <TextView
             android:id="@+id/connectionTextView"
             style="@style/TextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
             android:background="@color/colorConnecting"
             android:textAlignment="center"
-            android:layout_alignParentBottom="true"
             android:textSize="16sp" />
-
     </RelativeLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -5,18 +5,24 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+
+import pl.bsotniczuk.hygrosense.data.model.StatisticsItem;
 
 public class DateXAxisValueFormatter extends ValueFormatter {
 
+    private List<StatisticsItem> statisticsItems;
+
+    public DateXAxisValueFormatter(List<StatisticsItem> statisticsItems) {
+        this.statisticsItems = statisticsItems;
+    }
+
     @Override
     public String getAxisLabel(float value, AxisBase axis) {
-        Float dateFloat = value;
-        long dateLong = dateFloat.longValue();
-        Date date = new Date(dateLong);
+        int index = Math.round(value);
+        if (index < 0 || index >= statisticsItems.size()) return "";
+        Date date = statisticsItems.get(index).getDate();
 
-        String toReturn = new SimpleDateFormat("dd.MM.yy").format(date);
-        toReturn += " ";
-        toReturn += new SimpleDateFormat("HH:mm").format(date);
-        return toReturn;
+        return new SimpleDateFormat("dd.MM HH:mm").format(date);
     }
 }
