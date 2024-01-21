@@ -14,8 +14,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import pl.bsotniczuk.hygrosense.controller.CameraTextRecognition;
-import pl.bsotniczuk.hygrosense.data.DbConstants;
 import pl.bsotniczuk.hygrosense.model.SensorData;
 import pl.bsotniczuk.hygrosense.viewcontroller.MainActivityViewController;
 
@@ -35,25 +33,12 @@ public class MainActivity extends AppCompatActivity {
         mainActivityViewController.hygroDataChangedAutoCalibrationReferenceSensor(sensorData);
     }
 
-    public void deleteDb(View view) {
-        this.deleteDatabase(DbConstants.DATABASE_NAME);
-    }
-
-    public void readSettingsItem(View view) {
-        MainActivityViewController.databaseController.readSettingsItem();
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent resultIntent) {
-        //Bluetooth Intent
         super.onActivityResult(requestCode, resultCode, resultIntent);
-        if (requestCode == CameraTextRecognition.OVERLAY_REQUEST_CODE) {
-            // Make sure the request was successful
-            if (resultCode == RESULT_OK) {
-                Log.i("HygroSense", "working");
-            } else { //if user decided not to enable Bluetooth
-                Log.i("HygroSense", "not working");
-            }
+        if (requestCode == StaticUtil.RequestCodes.OVERLAY_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) Log.i("HygroSense", "Overlay enabled");
+            else Log.i("HygroSense", "Overlay disabled");
         }
     }
 
@@ -64,20 +49,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public ActivityResultLauncher<Intent> cameraActivityResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    if (result.getResultCode() == Activity.RESULT_OK) {
-                        mainActivityViewController.processImage();
-                    } else {
-                        Toast.makeText(getApplicationContext(), "Cancelled Camera", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-    );
-
-    public ActivityResultLauncher<Intent> cameraActivityResultLauncherCalibration = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override

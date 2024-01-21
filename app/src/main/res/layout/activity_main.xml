@@ -125,7 +125,7 @@
                     android:paddingTop="5dp">
 
                     <com.google.android.material.imageview.ShapeableImageView
-                        android:id="@+id/imageIv"
+                        android:id="@+id/imageView"
                         style="@style/TextView"
                         android:layout_width="250dp"
                         android:layout_height="220dp"
@@ -163,29 +163,6 @@
                     android:text="addToSettingsDb"
                     android:visibility="gone" />
 
-                <Button
-                    android:id="@+id/deleteDb"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/addToSettingsDb"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:onClick="deleteDb"
-                    android:text="deleteDb"
-                    android:visibility="gone" />
-
-                <Button
-                    android:id="@+id/readSettingsItem"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/deleteDb"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:onClick="readSettingsItem"
-                    android:text="readSettingsItem"
-                    android:visibility="gone" />
             </RelativeLayout>
         </ScrollView>
 

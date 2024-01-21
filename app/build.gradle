@@ -34,8 +34,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_9
+        targetCompatibility JavaVersion.VERSION_1_9
     }
     packagingOptions {
         exclude("META-INF/DEPENDENCIES")
@@ -102,6 +102,8 @@ dependencies {
     implementation "com.github.PhilJay:MPAndroidChart:v3.1.0"
 
     implementation 'com.google.mlkit:text-recognition:16.0.0'
+
+    implementation 'gov.nist.math:jama:1.0.3'
 
     implementation 'com.rmtheis:tess-two:9.0.0'
 //    implementation 'com.rmtheis:tess-two:5.4.1'

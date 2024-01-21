@@ -28,6 +28,8 @@
     <string name="wrong_aws_certificates">Wrong AWS certificates provided</string>
     <string name="all_sensors">All sensors</string>
     <string name="average">Average</string>
+
+    <string name="action_statistics">Statistics</string>
     <string name="average_data">Average data</string>
     <string name="records">records</string>
     <string name="no_records">(0 records)</string>
@@ -40,4 +42,9 @@
     <string name="deleted_all_statistics">Deleted all statistics</string>
 
     <string name="action_calibrate">Calibrate</string>
+    <string name="test_calibration_camera">Test ML Kit on a ref. sens. (Camera)</string>
+    <string name="test_calibration_gallery">Test ML Kit on a ref. sens. (Gallery)</string>
+    <string name="calibrate_based_on_reference_sensor_values">Calibrate with reference sensor</string>
+    <string name="auto_calibrate">Auto calibration (ref. sens. screen in front of device)</string>
+    <string name="stop_calibration">Stop calibration/measurements with ref. sens.</string>
 </resources>

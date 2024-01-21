@@ -29,6 +29,8 @@
     <string name="wrong_aws_certificates">Niepoprawne certyfikaty AWS</string>
     <string name="all_sensors">Sensory</string>
     <string name="average">Średnia</string>
+
+    <string name="action_statistics">Statystyki</string>
     <string name="average_data">Średnia historyczna</string>
     <string name="records">rekordów</string>
     <string name="no_records">(0 rekordów)</string>
@@ -41,4 +43,9 @@
     <string name="deleted_all_statistics">Usunięto wszystkie statystyki</string>
 
     <string name="action_calibrate">Kalibracja</string>
+    <string name="test_calibration_camera">Test ML Kit na sens. ref. (Kamera)</string>
+    <string name="test_calibration_gallery">Test ML Kit na sens. ref. (Galeria)</string>
+    <string name="calibrate_based_on_reference_sensor_values">Kalibruj z sensorem referencyjnym</string>
+    <string name="auto_calibrate">Auto kalibracja (ekran sens. ref. przed urządzeniem)</string>
+    <string name="stop_calibration">Zatrzymaj kalibrację/pomiary sens. ref.</string>
 </resources>

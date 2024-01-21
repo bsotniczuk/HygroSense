@@ -1,4 +1,4 @@
-package pl.bsotniczuk.hygrosense;
+package pl.bsotniczuk.hygrosense.calibration;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -12,7 +12,7 @@ import android.view.WindowManager;
 
 import java.io.IOException;
 
-import pl.bsotniczuk.hygrosense.controller.CameraTextRecognition;
+import pl.bsotniczuk.hygrosense.MainActivity;
 
 
 public class PhotoTaker {

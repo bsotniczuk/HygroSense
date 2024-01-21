@@ -1,11 +1,10 @@
-package pl.bsotniczuk.hygrosense.controller;
+package pl.bsotniczuk.hygrosense.calibration;
 
 import android.Manifest;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -33,26 +32,19 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import pl.bsotniczuk.hygrosense.ConnectionType;
 import pl.bsotniczuk.hygrosense.MainActivity;
-import pl.bsotniczuk.hygrosense.PhotoTaker;
 import pl.bsotniczuk.hygrosense.R;
 import pl.bsotniczuk.hygrosense.StaticUtil;
+import pl.bsotniczuk.hygrosense.controller.DatabaseController;
 import pl.bsotniczuk.hygrosense.model.SensorData;
 
 public class CameraTextRecognition {
-
-    private static final int CAMERA_REQUEST_CODE = 100;
-    private static final int CAMERA_REQUEST_CODE_CALIBRATION = 101;
-    private static final int CAMERA_REQUEST_CODE_AUTO_CALIBRATION = 102;
-    private static final int STORAGE_REQUEST_CODE = 103;
-    public static final int OVERLAY_REQUEST_CODE = 104;
 
     private String[] cameraPermissions;
     private String[] storagePermissions;
 
     private MainActivity mainActivity;
-    private StatisticsDbController statisticsDbController;
 
-    private ShapeableImageView imageIv;
+    private ShapeableImageView imageView;
 
     private TextRecognizer textRecognizer;
     private TextView textViewMlKit;
@@ -61,20 +53,15 @@ public class CameraTextRecognition {
 
     public CameraTextRecognition(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
-        imageIv = mainActivity.findViewById(R.id.imageIv);
+        imageView = mainActivity.findViewById(R.id.imageView);
 
         cameraPermissions = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
         storagePermissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
-//        storagePermissions = new String[]{Manifest.permission.HIDE_OVERLAY_WINDOWS};
 
         textRecognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS); //Or set LATIN
         textViewMlKit = mainActivity.findViewById(R.id.textViewMlKit);
 
         initInputImageDialog();
-
-        //TODO: uncomment
-//        this.statisticsDbController = new StatisticsDbController(this.mainActivity);
-//        statisticsDbController.deleteAllFromStatisticsTable();
     }
 
     Uri imageUri;
@@ -101,7 +88,7 @@ public class CameraTextRecognition {
     private void pickImageCameraCalibration() {
         if (!Settings.canDrawOverlays(mainActivity.getApplicationContext())) {
             Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + mainActivity.getPackageName()));
-            mainActivity.startActivityForResult(intent, OVERLAY_REQUEST_CODE);
+            mainActivity.startActivityForResult(intent, StaticUtil.RequestCodes.OVERLAY_REQUEST_CODE);
         } else {
             popupMenu.getMenu().add(Menu.NONE, 5, 5, "Stop calibration");
             new PhotoTaker(mainActivity);
@@ -111,14 +98,12 @@ public class CameraTextRecognition {
     private void pickImageCameraAutoCalibration() {
         if (!Settings.canDrawOverlays(mainActivity.getApplicationContext())) {
             Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + mainActivity.getPackageName()));
-            mainActivity.startActivityForResult(intent, OVERLAY_REQUEST_CODE);
+            mainActivity.startActivityForResult(intent, StaticUtil.RequestCodes.OVERLAY_REQUEST_CODE);
         } else {
             if (DatabaseController.settingsItem.getConnection_type() == ConnectionType.ACCESS_POINT) {
                 StaticUtil.isCalibrationInProgress = true;
                 popupMenu.getMenu().add(Menu.NONE, 5, 5, "Stop calibration");
-//                new PhotoTaker(mainActivity);
-            }
-            else {
+            } else {
                 Toast.makeText(mainActivity.getApplicationContext(), "Set device to AP mode", Toast.LENGTH_SHORT).show();
             }
         }
@@ -136,7 +121,7 @@ public class CameraTextRecognition {
 
     public void processImage(Uri imageUri) {
         this.imageUri = imageUri;
-        imageIv.setImageURI(imageUri);
+        imageView.setImageURI(imageUri);
         Log.i("HygroSense", "processing image | imageUri: " + imageUri);
 
         try {
@@ -148,15 +133,9 @@ public class CameraTextRecognition {
         }
     }
 
-    private void processImage(byte[] data) throws IOException {
-        Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-        InputImage inputImage = InputImage.fromBitmap(bitmap, 0);
-        processImage(inputImage);
-    }
-
     public void processImage(Bitmap bitmap) {
         bitmap = rotateBitmap(bitmap, 90);
-        imageIv.setImageBitmap(bitmap);
+        imageView.setImageBitmap(bitmap);
         InputImage inputImage = InputImage.fromBitmap(bitmap, 0);
         processImage(inputImage);
     }
@@ -169,7 +148,6 @@ public class CameraTextRecognition {
             List<Float> floats = new ArrayList<>();
             for (Text.TextBlock block : result.getTextBlocks()) {
                 String blockText = block.getText();
-//                Log.i("HygroSense", "block text:\n" + blockText);
 
                 if (isNumericString(blockText)) {
                     try {
@@ -177,7 +155,7 @@ public class CameraTextRecognition {
                         blockText = blockText.replaceAll(",", ".");
                         Float floatValue = Float.parseFloat(blockText);
                         floats.add(floatValue);
-                    } catch(NumberFormatException ex){
+                    } catch (NumberFormatException ex) {
                         Log.i("HygroSense", "Wrong value has been passed");
                     }
                 }
@@ -192,10 +170,8 @@ public class CameraTextRecognition {
                 sensorData.setHumidity(floats.get(0));
                 sensorData.setTemperature(floats.get(1));
                 mainActivity.hygroDataChangedAutoCalibrationReferenceSensor(sensorData);
-            }
-            else {
-                //too much or too little floats in a list
-                Log.i("HygroSense", "Too many float values");
+            } else {
+                Log.i("HygroSense", "Too few or too many float values");
             }
 
             String log = "";
@@ -222,7 +198,7 @@ public class CameraTextRecognition {
     }
 
     private void requestStoragePermission() {
-        ActivityCompat.requestPermissions(this.mainActivity, storagePermissions, STORAGE_REQUEST_CODE);
+        ActivityCompat.requestPermissions(this.mainActivity, storagePermissions, StaticUtil.RequestCodes.STORAGE_REQUEST_CODE);
     }
 
     private boolean checkCameraPermission() {
@@ -232,30 +208,30 @@ public class CameraTextRecognition {
     }
 
     private void requestCameraPermission() {
-        ActivityCompat.requestPermissions(this.mainActivity, cameraPermissions, CAMERA_REQUEST_CODE);
+        ActivityCompat.requestPermissions(this.mainActivity, cameraPermissions, StaticUtil.RequestCodes.CAMERA_REQUEST_CODE);
     }
 
     private void requestCameraPermissionCalibration() {
-        ActivityCompat.requestPermissions(this.mainActivity, cameraPermissions, CAMERA_REQUEST_CODE_CALIBRATION);
+        ActivityCompat.requestPermissions(this.mainActivity, cameraPermissions, StaticUtil.RequestCodes.CAMERA_REQUEST_CODE_CALIBRATION);
     }
 
     private void requestCameraPermissionAutoCalibration() {
-        ActivityCompat.requestPermissions(this.mainActivity, cameraPermissions, CAMERA_REQUEST_CODE_AUTO_CALIBRATION);
+        ActivityCompat.requestPermissions(this.mainActivity, cameraPermissions, StaticUtil.RequestCodes.CAMERA_REQUEST_CODE_AUTO_CALIBRATION);
     }
 
     public void permissionRelated(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == CAMERA_REQUEST_CODE
-                || requestCode == CAMERA_REQUEST_CODE_CALIBRATION
-                || requestCode == CAMERA_REQUEST_CODE_AUTO_CALIBRATION) {
+        if (requestCode == StaticUtil.RequestCodes.CAMERA_REQUEST_CODE
+                || requestCode == StaticUtil.RequestCodes.CAMERA_REQUEST_CODE_CALIBRATION
+                || requestCode == StaticUtil.RequestCodes.CAMERA_REQUEST_CODE_AUTO_CALIBRATION) {
             if (grantResults.length > 0) {
                 boolean cameraAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
 
                 if (cameraAccepted) {
-                    if (requestCode == CAMERA_REQUEST_CODE) {
+                    if (requestCode == StaticUtil.RequestCodes.CAMERA_REQUEST_CODE) {
                         pickImageCamera();
-                    } else if (requestCode == CAMERA_REQUEST_CODE_CALIBRATION) {
+                    } else if (requestCode == StaticUtil.RequestCodes.CAMERA_REQUEST_CODE_CALIBRATION) {
                         pickImageCameraCalibration();
-                    } else if (requestCode == CAMERA_REQUEST_CODE_AUTO_CALIBRATION) {
+                    } else if (requestCode == StaticUtil.RequestCodes.CAMERA_REQUEST_CODE_AUTO_CALIBRATION) {
                         pickImageCameraAutoCalibration();
                     }
                 } else {
@@ -264,7 +240,7 @@ public class CameraTextRecognition {
             } else {
                 Toast.makeText(mainActivity.getApplicationContext(), "Cancelled abc1", Toast.LENGTH_SHORT).show();
             }
-        } else if (requestCode == STORAGE_REQUEST_CODE) {
+        } else if (requestCode == StaticUtil.RequestCodes.STORAGE_REQUEST_CODE) {
             if (grantResults.length > 0) {
 //                boolean cameraAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
 //                    boolean storageAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
@@ -282,12 +258,10 @@ public class CameraTextRecognition {
     private void initInputImageDialog() {
         popupMenu = new PopupMenu(this.mainActivity, mainActivity.findViewById(R.id.toolbar));
 
-        popupMenu.getMenu().add(Menu.NONE, 1, 1, "Camera");
-        popupMenu.getMenu().add(Menu.NONE, 2, 2, "Gallery");
-        popupMenu.getMenu().add(Menu.NONE, 3, 3, "Calibrate");
-        popupMenu.getMenu().add(Menu.NONE, 4, 4, "Auto Calibrate");
-
-//        popupMenu.show();
+        popupMenu.getMenu().add(Menu.NONE, 1, 1, R.string.test_calibration_camera);
+        popupMenu.getMenu().add(Menu.NONE, 2, 2, R.string.test_calibration_gallery);
+        popupMenu.getMenu().add(Menu.NONE, 3, 3, R.string.calibrate_based_on_reference_sensor_values);
+        popupMenu.getMenu().add(Menu.NONE, 4, 4, R.string.auto_calibrate);
 
         popupMenu.setOnMenuItemClickListener(menuItem -> {
             int id = menuItem.getItemId();
@@ -326,7 +300,7 @@ public class CameraTextRecognition {
     public void showInputImageDialog() {
         popupMenu.show();
         if (StaticUtil.isCalibrationInProgress && popupMenu.getMenu().size() < 5) {
-            popupMenu.getMenu().add(Menu.NONE, 5, 5, "Stop calibration");
+            popupMenu.getMenu().add(Menu.NONE, 5, 5, R.string.stop_calibration);
         }
     }
 }
